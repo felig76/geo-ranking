@@ -1,6 +1,7 @@
 #title {
   justify-self: center;
-  margin: 3rem;
+  margin: 2rem;
+  font-size: 2rem;
 }
 
 #game {
@@ -24,20 +25,47 @@
 }
 
 .hidden {
-  background-color: #1b1b1b;
+  background-color: #141414;
 }
 
 .revealed {
-  background-color: rgb(2, 51, 0);
+  background-color: #012200;
 }
 
 #guessInput {
   gap: 0.5rem;
   display: flex;
+  position: relative;
 }
 
 #countryInput {
+  text-indent: 1rem;
+  font-weight: 500;
   background-color: #131313;
   border-radius: 5px;
   border: 1px solid #6b6b6b;
+}
+
+
+.suggestions {
+  top: 110%;
+  width: 100%;
+  position: absolute;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0;
+  border: 1px solid #6b6b6b;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: rgb(34, 34, 34);
+}
+
+.suggestions li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestions li:hover {
+  background-color: #3b3b3b;
 }
