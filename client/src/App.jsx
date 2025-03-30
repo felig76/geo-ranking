@@ -24,6 +24,7 @@ function App() {
       .catch(error => console.error("Error al obtener la lista de países:", error));
   }, []);
 
+  //
   const handleInputChange = (e) => {
     const value = e.target.value;
     setGuess(value);
@@ -31,7 +32,7 @@ function App() {
     if (value.length > 0) {
       setFilteredCountries(
         countriesList.filter(country =>
-          country.toLowerCase().startsWith(value.toLowerCase())
+          country.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 5)
       );
     } else {
@@ -39,11 +40,13 @@ function App() {
     }
   };
 
+  //si se presiona uno de los li del autocompletado se setea el guess
   const handleSelectSuggestion = (country) => {
     setGuess(country);
     setFilteredCountries([]); // Oculta las sugerencias
   };
 
+  //manejo del intento
   const handleGuess = (e) => {
     e.preventDefault();
 
@@ -68,13 +71,18 @@ function App() {
     <div>
       <header>
         <h2 id="title">Geo Ranking</h2>
+        <div id="configButtons"></div>
+          <div className="headeConfigButton" id="languageSelect">
+            <button>🇪🇸</button>
+          </div>
+          <button className="headeConfigButton" id="colorSchemeSelect">🌙</button>
       </header>
       <div id="game">
         <h3>{gameConfig?.title || "Cargando..."}</h3>
         <ul className="list">
           {data.map((item, index) => (
             <li key={index} className={`list-item ${revealed.includes(index) ? "revealed" : "hidden"}`}>
-              {revealed.includes(index) ? `${item.country}: ${item.value.toLocaleString()} km²` : ""}
+              {revealed.includes(index) ? `Top ${index+1} - ${item.country}: ${item.value.toLocaleString()} km²` : ""}
             </li>
           ))}
         </ul>

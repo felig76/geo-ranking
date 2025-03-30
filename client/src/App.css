@@ -1,8 +1,22 @@
-#title {
-  justify-self: center;
-  margin: 2rem;
-  font-size: 2rem;
+header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
 }
+
+#title {
+  text-align: center;
+}
+
+.headeConfigButton {
+  margin-left: 0.5rem;
+}
+
+#languageSelect {
+  display: flex;
+  align-items: center;
+}
+
 
 #game {
   justify-items: center;
@@ -41,6 +55,7 @@
 #countryInput {
   text-indent: 1rem;
   font-weight: 500;
+  font-size: 1rem;
   background-color: #131313;
   border-radius: 5px;
   border: 1px solid #6b6b6b;
