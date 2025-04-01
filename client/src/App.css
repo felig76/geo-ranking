@@ -17,6 +17,30 @@ header {
   align-items: center;
 }
 
+#gameStatus {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+#timer {
+  width: 2.25rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  background-color: #131313;
+  border-radius: 5px;
+  border: 1px solid #6b6b6b;
+  transition: all 0.2s ease, color 0.2s ease;
+}
+
+#timer.warning {
+  color: #ff5252;
+}
+
+#timer.expired {
+  color: #5f5f5f;
+}
+  
 
 #game {
   justify-items: center;
@@ -51,6 +75,16 @@ header {
   display: flex;
   position: relative;
 }
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+#guessInput.shake {
+  animation: shake 0.4s ease-in-out;
+}
 
 #countryInput {
   text-indent: 1rem;
@@ -59,6 +93,11 @@ header {
   background-color: #131313;
   border-radius: 5px;
   border: 1px solid #6b6b6b;
+  transition: all 0.1s ease-in-out;
+}
+
+#countryInput.error {
+  border: 1px solid red;
 }
 
 
