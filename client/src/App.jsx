@@ -111,15 +111,14 @@ function App() {
     <div>
       <header>
         <h2 id="title">Geo Ranking</h2>
-        <div id="configButtons"></div>
-          <div className="headeConfigButton" id="languageSelect">
-            <button>🇪🇸</button>
-          </div>
-          <button className="headeConfigButton" id="colorSchemeSelect">🌙</button>
+        <div id="configButtons">
+          <button id="toggleConfigPanel">⚙️</button>
+          <button id="toggleTheme">🌙</button>
+        </div>
       </header>
       <div id="game">
         <div id="gameStatus">
-          <h3>{gameTitle || "Cargando..."}</h3>
+          <h3 id="gameTitle">{gameTitle || "Cargando..."}</h3>
           <h3 id="timer" className={
             revealed.length === data.length ? "victory" : 
             timeLeft === 0 ? "expired" : 

@@ -1,35 +1,45 @@
+/* HEADER */
 header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 1rem;
+  position: relative;
 }
-
 #title {
-  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.headeConfigButton {
-  margin-left: 0.5rem;
-}
-
-#languageSelect {
+#configButtons {
   display: flex;
-  align-items: center;
+  margin-left: 0.5rem;
+  gap: 0.5rem;
 }
 
+/* ESTADO DEL JUEGO */
 #gameStatus {
   display: flex;
   align-items: center;
-  gap: 4rem;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem;
+}
+
+#gameTitle {
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 #timer {
-  width: 2.25rem;
-  font-weight: 500;
+  width: 2.5rem;
   padding: 0.5rem;
+  font-weight: 500;
   background-color: #131313;
-  border-radius: 5px;
   border: 1px solid #6b6b6b;
+  border-radius: 5px;
+  text-align: center;
   transition: all 0.2s ease, color 0.2s ease;
 }
 
@@ -45,55 +55,65 @@ header {
   color: #47ff47;
 }
 
+/* JUEGO */
 #game {
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* LISTA */
 .list {
   list-style: none;
+  padding-left: 0;
+  margin-left: 0;
   width: 30rem;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .list-item {
+  width: 100%;
+  height: 1.5rem;
   padding: 0.5rem;
   margin-top: 0.5rem;
-  width: 100%;
-  height: 2rem;
-  background-color: #131313;
-  border-radius: 5px;
   border: 1px solid #6b6b6b;
+  border-radius: 5px;
+  text-align: left;
 }
-
 .hidden {
   background-color: #141414;
 }
-
 .revealed {
   background-color: #012200;
-  border: 1px solid #47ff47;
+  border-color: #47ff47;
 }
-
 .revealedLost {
   background-color: #222222;
-  border: 1px solid #ff3838;
+  border-color: #ff3838;
+}
+
+/* MENSAJE DE FIN */
+.game-over-message {
+  font-size: 1rem;
 }
 
 .game-over-message.lost {
-  font-size: 1rem;
   color: #ff3838;
 }
+
 .game-over-message.victory {
-  font-size: 1rem;
   color: #47ff47;
 }
 
-
+/* INPUT */
 #guessInput {
-  gap: 0.5rem;
   display: flex;
+  gap: 0.5rem;
   position: relative;
 }
+
 @keyframes shake {
   0% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
@@ -101,17 +121,20 @@ header {
   75% { transform: translateX(-5px); }
   100% { transform: translateX(0); }
 }
+
 #guessInput.shake {
   animation: shake 0.4s ease-in-out;
 }
 
 #countryInput {
-  text-indent: 1rem;
-  font-weight: 500;
+  width: 100%;
+  padding: 0.5rem;
   font-size: 1rem;
+  font-weight: 500;
   background-color: #131313;
-  border-radius: 5px;
   border: 1px solid #6b6b6b;
+  border-radius: 5px;
+  text-indent: 1rem;
   transition: all 0.1s ease-in-out;
 }
 
@@ -119,19 +142,19 @@ header {
   border: 1px solid red;
 }
 
-
+/* AUTOCOMPLETADO */
 .suggestions {
+  position: absolute;
   top: 110%;
   width: 100%;
-  position: absolute;
   list-style: none;
   padding: 0;
   margin: 5px 0;
-  border: 1px solid #6b6b6b;
-  border-radius: 5px;
   max-height: 150px;
   overflow-y: auto;
-  background-color: rgb(34, 34, 34);
+  background-color: #222;
+  border: 1px solid #6b6b6b;
+  border-radius: 5px;
 }
 
 .suggestions li {
