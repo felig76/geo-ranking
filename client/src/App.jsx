@@ -17,14 +17,14 @@ function App() {
   
 
   useEffect(() => {
-    axios.get("http://localhost:3001/data")
+    axios.get("http://localhost:3000/games")
       .then(response => {
         setGameTitle(response.data.gameTitle);
         setUnit(response.data.unit);
         setData(response.data.data);
       })
       .catch(error => console.error("Error al obtener los datos:", error));
-    axios.get("http://localhost:3001/countries")
+    axios.get("http://localhost:3000/countries")
       .then(response => setCountriesList(response.data))
       .catch(error => console.error("Error al obtener la lista de países:", error));
   }, []); // Solo se ejecuta una vez al montar el componente

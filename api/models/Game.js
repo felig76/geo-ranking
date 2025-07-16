@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const gameSchema = new mongoose.Schema({
   gameTitle: String,
-  wikidataProperty: String,
+  countries: {
+    name: String,
+    value: Number
+  },
+  unitOfMeasure: String,
   guesses: Number
 });
 
