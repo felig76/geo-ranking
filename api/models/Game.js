@@ -1,13 +1,27 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const gameSchema = new mongoose.Schema({
-  gameTitle: String,
-  countries: {
-    name: String,
-    value: Number
+  title: {
+    type: String,
+    required: true,
   },
-  unitOfMeasure: String,
-  guesses: Number
+  countries: [
+    {
+      countryName: {
+        type: String,
+        required: true
+      },
+      value: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
+  unit: {
+    type: String,
+    required: true,
+  }
 });
 
-module.exports = mongoose.model("Game", gameSchema);
+const Game = mongoose.model("Game", gameSchema);
+export default Game;
