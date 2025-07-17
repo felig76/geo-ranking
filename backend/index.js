@@ -8,6 +8,8 @@ import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -20,10 +22,10 @@ app.get("/", (req, res) => {
 app.use("/api/games", gameRoutes);
 app.use("/api/countries", countryRoutes);
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.clear();
   connectDB();
-  console.log("API funcionando en http://localhost:3000/")
+  console.log("API funcionando en http://localhost:"+PORT);
 });
 
 
