@@ -2,49 +2,67 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
-import Header from "./components/Header.jsx";
-
 function App() {
   const [gameTitle, setGameTitle] = useState("");
   const [unit, setUnit] = useState("");
-  const [data, setData] = useState([]); // List of countries in the ranking
-  const [countriesList, setCountriesList] = useState([]); // Complete list of countries
-  const [filteredCountries, setFilteredCountries] = useState([]); // Filtered suggestions
-  const [revealedCountries, setRevealedCountries] = useState([]); // Indices of revealed countries
-  const [revealedLost, setRevealedLost] = useState([]); // Indices of revealed countries
-  const [guess, setGuess] = useState(""); // Country entered by the user
+  const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [countriesList, setCountriesList] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [revealedCountries, setRevealedCountries] = useState([]);
+  const [revealedLost, setRevealedLost] = useState([]);
+  const [guess, setGuess] = useState("");
   const [error, setError] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120);
   const [gameOver, setGameOver] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/games")
+    axios.get("http://localhost:3000/api/games")
       .then((response) => {
-        setGameTitle(response.data.gameTitle);
-        setUnit(response.data.unit);
-        setData(response.data.data);
+        const juegos = response.data.data;
+        if (!juegos || juegos.length === 0) {
+          console.error("No hay juegos disponibles");
+          return;
+        }
+
+        const today = new Date();
+        const dayOverride = 52; // para pruebas
+        const dayOfYear = dayOverride ?? Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+
+        const gameIndex = dayOfYear % juegos.length;
+        const game = juegos[gameIndex];
+
+        setGameTitle(game.title);
+        setUnit(game.unit);
+        setCorrectAnswers(
+          game.countries.map(({ countryName, value }) => ({
+            country: countryName,
+            value
+          }))
+        );
       })
-      .catch((error) => console.error("Error fetching data:", error));
-    axios.get("http://localhost:3000/countries")
-      .then((response) => setCountriesList(response.data))
+      .catch((error) => console.error("Error fetching games:", error));
+
+    axios.get("http://localhost:3000/api/countries")
+      .then((response) => setCountriesList(response.data.data))
       .catch((error) => console.error("Error fetching countries list:", error));
   }, []);
 
   useEffect(() => {
-    if (data.length === 0) return;
+    if (correctAnswers.length === 0) return;
 
-    if (timeLeft > 0 && revealedCountries.length < data.length) {
+    if (timeLeft > 0 && revealedCountries.length < correctAnswers.length) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     } else {
       setGameOver(true);
       setRevealedLost(
-        data
+        correctAnswers
           .map((_, index) => (revealedCountries.includes(index) ? null : index))
           .filter((index) => index !== null)
       );
     }
-  }, [timeLeft, revealedCountries, data]);
+  }, [timeLeft, revealedCountries, correctAnswers]);
 
   useEffect(() => {
     if (error) {
@@ -56,28 +74,49 @@ function App() {
   const handleInputChange = (event) => {
     const value = event.target.value;
     setGuess(value);
+    setSelectedIndex(-1);
 
     if (value.length > 0) {
       setFilteredCountries(
-        countriesList.filter((country) =>
-          country.toLowerCase().includes(value.toLowerCase())
-        ).slice(0, 5)
+        countriesList
+          .filter((country) =>
+            country.countryName.toLowerCase().includes(value.toLowerCase())
+          )
+          .slice(0, 5)
       );
     } else {
       setFilteredCountries([]);
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (filteredCountries.length === 0) return;
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSelectedIndex((prev) => prev < filteredCountries.length - 1 ? prev + 1 : 0);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSelectedIndex((prev) => prev > 0 ? prev - 1 : filteredCountries.length - 1);
+    } else if (event.key === "Enter") {
+      if (selectedIndex >= 0) {
+        event.preventDefault();
+        handleSelectSuggestion(filteredCountries[selectedIndex]);
+      }
+    }
+  };
+
   const handleSelectSuggestion = (country) => {
-    setGuess(country);
-    document.getElementById("countryInput").focus();
+    setGuess(country.countryName);
     setFilteredCountries([]);
+    setSelectedIndex(-1);
+    document.getElementById("countryInput").focus();
   };
 
   const handleGuess = (event) => {
     event.preventDefault();
 
-    const guessedIndex = data.findIndex((item) =>
+    const guessedIndex = correctAnswers.findIndex((item) =>
       item.country.toLowerCase() === guess.toLowerCase()
     );
 
@@ -105,14 +144,22 @@ function App() {
 
   return (
     <div>
-      <Header />
+      <header>
+        <h2 id="title">Geo Ranking</h2>
+        <div id="configButtons">
+          <div className="headeConfigButton" id="languageSelect">
+            <button>🇪🇸</button>
+          </div>
+          <button className="headeConfigButton" id="colorSchemeSelect">🌙</button>
+        </div>
+      </header>
       <div id="game">
         <div id="gameStatus">
           <h3>{gameTitle || "Loading..."}</h3>
           <h3
             id="timer"
             className={
-              revealedCountries.length === data.length
+              revealedCountries.length === correctAnswers.length
                 ? "victory"
                 : timeLeft === 0
                 ? "expired"
@@ -125,24 +172,22 @@ function App() {
           </h3>
         </div>
         <ul className="list">
-          {data.map((item, index) => (
+          {correctAnswers.map((item, index) => (
             <li
               key={index}
-              className={`list-item 
-                ${revealedCountries.includes(index) ? "revealed" : ""}
-                ${revealedLost.includes(index) ? "revealedLost" : ""}
-                ${!revealedCountries.includes(index) && !revealedLost.includes(index) ? "hidden" : ""}
-              `}
+              className={`list-item ${revealedCountries.includes(index) ? "revealed" : ""} ${revealedLost.includes(index) ? "revealedLost" : ""} ${!revealedCountries.includes(index) && !revealedLost.includes(index) ? "hidden" : ""}`}
             >
-              {revealedCountries.includes(index) || revealedLost.includes(index) ? `Top ${index + 1} - ${item.country}: ${item.value.toLocaleString()} ${unit}` : ""}
+              {revealedCountries.includes(index) || revealedLost.includes(index) ? (
+                `Top ${index + 1} - ${item.country}: ${item.value.toLocaleString()} ${unit}`
+              ) : (
+                ""
+              )}
             </li>
           ))}
         </ul>
         {gameOver && (
-          <h3
-            className={`game-over-message ${revealedCountries.length === data.length ? "victory" : "lost"}`}
-          >
-            {revealedCountries.length === data.length
+          <h3 className={`game-over-message ${revealedCountries.length === correctAnswers.length ? "victory" : "lost"}`}>
+            {revealedCountries.length === correctAnswers.length
               ? "You guessed all the countries!"
               : "Time's up! You couldn't guess all the countries."}
           </h3>
@@ -153,14 +198,19 @@ function App() {
             type="text"
             value={guess}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             placeholder="Enter a country..."
             disabled={gameOver}
             className={error ? "error" : ""}
           />
           <ul className="suggestions">
             {filteredCountries.map((country, index) => (
-              <li key={index} onClick={() => handleSelectSuggestion(country)}>
-                {country}
+              <li
+                key={index}
+                onClick={() => handleSelectSuggestion(country)}
+                className={index === selectedIndex ? "selected" : ""}
+              >
+                {country.countryName}
               </li>
             ))}
           </ul>
