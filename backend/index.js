@@ -27,28 +27,3 @@ app.listen(PORT, () => {
   connectDB();
   console.log("API funcionando en http://localhost:"+PORT);
 });
-
-
-
-/* 
-const countriesQuery = `
-SELECT ?country ?countryLabel WHERE {
-  ?country wdt:P31 wd:Q6256.
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-}
-`;
-
-app.get("/api/countries", async (req, res) => {
-  const url = `https://query.wikidata.org/sparql?query=${encodeURIComponent(countriesQuery)}&format=json`;
-
-  try {
-    const response = await axios.get(url);
-
-    const countries = response.data.results.bindings.map((entry) => entry.countryLabel.value);
-    res.json(countries);
-  } catch (error) {
-    console.error("Error al obtener nombres de países de wikidata.org:", error);
-    res.status(500).json({ error: "Error al obtener datos de países" });
-  }
-});
-*/
