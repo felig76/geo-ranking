@@ -2,65 +2,64 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
+import Header from "./components/Header.jsx";
+
 function App() {
-  const [gameTitle, setGameTitle] = useState("Cargando...");
+  const [gameTitle, setGameTitle] = useState("");
   const [unit, setUnit] = useState("");
-  const [data, setData] = useState([]); // Lista de países del ranking
-  const [countriesList, setCountriesList] = useState([]); // Lista completa de países
-  const [filteredCountries, setFilteredCountries] = useState([]); // Sugerencias filtradas
-  const [revealed, setRevealed] = useState([]); // Índices de países adivinados
-  const [revealedLost, setRevealedLost] = useState([]); // Índices de países adivinados
-  const [guess, setGuess] = useState(""); // País ingresado por el usuario
+  const [data, setData] = useState([]); // List of countries in the ranking
+  const [countriesList, setCountriesList] = useState([]); // Complete list of countries
+  const [filteredCountries, setFilteredCountries] = useState([]); // Filtered suggestions
+  const [revealedCountries, setRevealedCountries] = useState([]); // Indices of revealed countries
+  const [revealedLost, setRevealedLost] = useState([]); // Indices of revealed countries
+  const [guess, setGuess] = useState(""); // Country entered by the user
   const [error, setError] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120);
   const [gameOver, setGameOver] = useState(false);
-  
 
   useEffect(() => {
     axios.get("http://localhost:3000/games")
-      .then(response => {
+      .then((response) => {
         setGameTitle(response.data.gameTitle);
         setUnit(response.data.unit);
         setData(response.data.data);
       })
-      .catch(error => console.error("Error al obtener los datos:", error));
+      .catch((error) => console.error("Error fetching data:", error));
     axios.get("http://localhost:3000/countries")
-      .then(response => setCountriesList(response.data))
-      .catch(error => console.error("Error al obtener la lista de países:", error));
-  }, []); // Solo se ejecuta una vez al montar el componente
+      .then((response) => setCountriesList(response.data))
+      .catch((error) => console.error("Error fetching countries list:", error));
+  }, []);
 
   useEffect(() => {
     if (data.length === 0) return;
-  
-    if (timeLeft > 0 && revealed.length < data.length) {
+
+    if (timeLeft > 0 && revealedCountries.length < data.length) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     } else {
       setGameOver(true);
-      setRevealedLost(data
-        .map((_, index) => (revealed.includes(index) ? null : index))
-        .filter(index => index !== null)
+      setRevealedLost(
+        data
+          .map((_, index) => (revealedCountries.includes(index) ? null : index))
+          .filter((index) => index !== null)
       );
     }
-  }, [timeLeft, revealed, data]); 
-  
-  // Manejo del error visual en el input
+  }, [timeLeft, revealedCountries, data]);
+
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(false), 500);
       return () => clearTimeout(timer);
     }
-  }, [error]); 
-  
+  }, [error]);
 
-  //si cambia el valor de input se sugieren nuevos países
-  const handleInputChange = (e) => {
-    const value = e.target.value;
+  const handleInputChange = (event) => {
+    const value = event.target.value;
     setGuess(value);
 
     if (value.length > 0) {
       setFilteredCountries(
-        countriesList.filter(country =>
+        countriesList.filter((country) =>
           country.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 5)
       );
@@ -69,28 +68,26 @@ function App() {
     }
   };
 
-  //si se presiona uno de los li del autocompletado se setea el guess
   const handleSelectSuggestion = (country) => {
     setGuess(country);
     document.getElementById("countryInput").focus();
-    setFilteredCountries([]); // Oculta las sugerencias
+    setFilteredCountries([]);
   };
 
-  //manejo del intento
-  const handleGuess = (e) => {
-    e.preventDefault();
-  
-    const guessedIndex = data.findIndex((item) => 
+  const handleGuess = (event) => {
+    event.preventDefault();
+
+    const guessedIndex = data.findIndex((item) =>
       item.country.toLowerCase() === guess.toLowerCase()
     );
-  
-    if (guessedIndex !== -1 && !revealed.includes(guessedIndex)) {
-      setRevealed([...revealed, guessedIndex]); // Revela el país si es correcto
-      setGuess(""); // Limpia el input
-      setFilteredCountries([]); // Oculta sugerencias
+
+    if (guessedIndex !== -1 && !revealedCountries.includes(guessedIndex)) {
+      setRevealedCountries([...revealedCountries, guessedIndex]);
+      setGuess("");
+      setFilteredCountries([]);
       setError(false);
     } else {
-      setGuess("");  // Limpiar el input
+      setGuess("");
       setError(true);
       document.getElementById("countryInput").blur();
       setTimeout(() => {
@@ -100,57 +97,63 @@ function App() {
     }
   };
 
-
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return `${min}:${sec.toString().padStart(2, "0")}`;
-  };  
+  };
 
   return (
     <div>
-      <header>
-        <h2 id="title">Geo Ranking</h2>
-        <div id="configButtons"></div>
-          <div className="headeConfigButton" id="languageSelect">
-            <button>🇪🇸</button>
-          </div>
-          <button className="headeConfigButton" id="colorSchemeSelect">🌙</button>
-      </header>
+      <Header />
       <div id="game">
         <div id="gameStatus">
-          <h3>{gameTitle || "Cargando..."}</h3>
-          <h3 id="timer" className={
-            revealed.length === data.length ? "victory" : 
-            timeLeft === 0 ? "expired" : 
-            timeLeft <= 10 ? "warning" : ""
-          }>
+          <h3>{gameTitle || "Loading..."}</h3>
+          <h3
+            id="timer"
+            className={
+              revealedCountries.length === data.length
+                ? "victory"
+                : timeLeft === 0
+                ? "expired"
+                : timeLeft <= 10
+                ? "warning"
+                : ""
+            }
+          >
             {formatTime(timeLeft)}
           </h3>
         </div>
         <ul className="list">
           {data.map((item, index) => (
-            <li key={index} className={`list-item 
-              ${revealed.includes(index) ? "revealed" : ""}
-              ${revealedLost.includes(index) ? "revealedLost" : ""}
-              ${!revealed.includes(index) && !revealedLost.includes(index) ? "hidden" : ""}
-            `}>
-              {revealed.includes(index) || revealedLost.includes(index) ? `Top ${index + 1} - ${item.country}: ${item.value.toLocaleString()} ${unit}` : ""}
+            <li
+              key={index}
+              className={`list-item 
+                ${revealedCountries.includes(index) ? "revealed" : ""}
+                ${revealedLost.includes(index) ? "revealedLost" : ""}
+                ${!revealedCountries.includes(index) && !revealedLost.includes(index) ? "hidden" : ""}
+              `}
+            >
+              {revealedCountries.includes(index) || revealedLost.includes(index) ? `Top ${index + 1} - ${item.country}: ${item.value.toLocaleString()} ${unit}` : ""}
             </li>
           ))}
         </ul>
         {gameOver && (
-          <h3 className={`game-over-message ${revealed.length === data.length ? "victory" : "lost"}`}>
-            {revealed.length === data.length ? "Adivinaste todos los países." : "¡Tiempo agotado! No pudiste adivinar todos los países."}
+          <h3
+            className={`game-over-message ${revealedCountries.length === data.length ? "victory" : "lost"}`}
+          >
+            {revealedCountries.length === data.length
+              ? "You guessed all the countries!"
+              : "Time's up! You couldn't guess all the countries."}
           </h3>
         )}
         <form id="guessInput" onSubmit={handleGuess} className={error ? "shake" : ""}>
-          <input 
+          <input
             id="countryInput"
-            type="text" 
-            value={guess} 
-            onChange={handleInputChange} 
-            placeholder="Escribe un país..."
+            type="text"
+            value={guess}
+            onChange={handleInputChange}
+            placeholder="Enter a country..."
             disabled={gameOver}
             className={error ? "error" : ""}
           />

@@ -1,3 +1,7 @@
+#game {
+  justify-items: center;
+}
+
 header {
   display: flex;
   align-items: center;
@@ -8,7 +12,7 @@ header {
   text-align: center;
 }
 
-.headeConfigButton {
+.headerConfigButton {
   margin-left: 0.5rem;
 }
 
@@ -17,37 +21,6 @@ header {
   align-items: center;
 }
 
-#gameStatus {
-  display: flex;
-  align-items: center;
-  gap: 4rem;
-}
-
-#timer {
-  width: 2.25rem;
-  font-weight: 500;
-  padding: 0.5rem;
-  background-color: #131313;
-  border-radius: 5px;
-  border: 1px solid #6b6b6b;
-  transition: all 0.2s ease, color 0.2s ease;
-}
-
-#timer.warning {
-  color: #ff3838;
-}
-
-#timer.expired {
-  color: #5f5f5f;
-}
-
-.victory {
-  color: #47ff47;
-}
-
-#game {
-  justify-items: center;
-}
 
 .list {
   list-style: none;
@@ -79,6 +52,35 @@ header {
   border: 1px solid #ff3838;
 }
 
+#gameStatus {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+#timer {
+  width: 2.25rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  background-color: #131313;
+  border-radius: 5px;
+  border: 1px solid #6b6b6b;
+  transition: all 0.2s ease, color 0.2s ease;
+}
+
+#timer.warning {
+  color: #ff3838;
+}
+
+#timer.expired {
+  color: #5f5f5f;
+}
+
+#timer.victory {
+  color: #47ff47;
+}
+
+
 .game-over-message.lost {
   font-size: 1rem;
   color: #ff3838;
@@ -87,7 +89,6 @@ header {
   font-size: 1rem;
   color: #47ff47;
 }
-
 
 #guessInput {
   gap: 0.5rem;
