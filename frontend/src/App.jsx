@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
+import { fetchGames, getTodayGame } from "./api/gameApi.js";
+import { fetchCountries } from "./api/countryApi.js";
+
 function App() {
   const [gameTitle, setGameTitle] = useState("");
   const [unit, setUnit] = useState("");
@@ -17,35 +20,21 @@ function App() {
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/games")
-      .then((response) => {
-        const juegos = response.data.data;
-        if (!juegos || juegos.length === 0) {
-          console.error("No hay juegos disponibles");
-          return;
-        }
+    const loadGame = async () => {
+      const todayGame = getTodayGame(await fetchGames(), 2);
 
-        const today = new Date();
-        const dayOverride = 52; // para pruebas
-        const dayOfYear = dayOverride ?? Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      if (todayGame) {
+        setGameParameters(todayGame);
+      } else {
+        console.error("No hay juegos para hoy");
+      }
+    };
+    loadGame();
 
-        const gameIndex = dayOfYear % juegos.length;
-        const game = juegos[gameIndex];
-
-        setGameTitle(game.title);
-        setUnit(game.unit);
-        setCorrectAnswers(
-          game.countries.map(({ countryName, value }) => ({
-            country: countryName,
-            value
-          }))
-        );
-      })
-      .catch((error) => console.error("Error fetching games:", error));
-
-    axios.get("http://localhost:3000/api/countries")
-      .then((response) => setCountriesList(response.data.data))
-      .catch((error) => console.error("Error fetching countries list:", error));
+    const countries = fetchCountries();
+    countries.then((data) => {
+      setCountriesList(data);
+    });
   }, []);
 
   useEffect(() => {
@@ -70,6 +59,15 @@ function App() {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  const setGameParameters = (game) => {
+    setGameTitle(game.title);
+    setUnit(game.unit);
+    setCorrectAnswers(game.countries.map(({ countryName, value }) => ({
+      country: countryName,
+      value
+    })));
+  };
 
   const handleInputChange = (event) => {
     const value = event.target.value;
