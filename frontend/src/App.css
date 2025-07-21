@@ -108,7 +108,7 @@ header {
   transition: all 0.1s ease-in-out;
 }
 
-#countryInput.error {
+#countryInput.wrongAnswer {
   border: 1px solid red;
 }
 

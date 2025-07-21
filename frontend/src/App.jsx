@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "./App.css";
 
 import { fetchGames, getTodayGame } from "./api/gameApi.js";
@@ -14,11 +13,12 @@ function App() {
   const [revealedCountries, setRevealedCountries] = useState([]);
   const [revealedLost, setRevealedLost] = useState([]);
   const [guess, setGuess] = useState("");
-  const [error, setError] = useState(false);
+  const [wrongAnswer, setWrongAnswer] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120);
   const [gameOver, setGameOver] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
+  // Cargar juegos y paises
   useEffect(() => {
     const loadGame = async () => {
       const todayGame = getTodayGame(await fetchGames(), 2);
@@ -37,6 +37,7 @@ function App() {
     });
   }, []);
 
+  // Timer y fin del juego
   useEffect(() => {
     if (correctAnswers.length === 0) return;
 
@@ -53,13 +54,33 @@ function App() {
     }
   }, [timeLeft, revealedCountries, correctAnswers]);
 
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(false), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  const handleGuess = (event) => {
+    event.preventDefault();
 
+    const guessedIndex = correctAnswers.findIndex((item) =>
+      item.country.toLowerCase() === guess.toLowerCase()
+    );
+
+    if (guessedIndex !== -1 && !revealedCountries.includes(guessedIndex)) {
+      setRevealedCountries([...revealedCountries, guessedIndex]);
+      setGuess("");
+      setFilteredCountries([]);
+    } else {
+      setGuess("");
+      triggerWrongAnswer();
+    }
+  };
+
+  const triggerWrongAnswer = () => {
+    setWrongAnswer(true);
+    setFilteredCountries([]);
+    document.getElementById("countryInput").blur();
+    setTimeout(() => {
+      setWrongAnswer(false);
+      document.getElementById("countryInput").focus();
+    }, 500);
+  }
+  
   const setGameParameters = (game) => {
     setGameTitle(game.title);
     setUnit(game.unit);
@@ -109,29 +130,6 @@ function App() {
     setFilteredCountries([]);
     setSelectedIndex(-1);
     document.getElementById("countryInput").focus();
-  };
-
-  const handleGuess = (event) => {
-    event.preventDefault();
-
-    const guessedIndex = correctAnswers.findIndex((item) =>
-      item.country.toLowerCase() === guess.toLowerCase()
-    );
-
-    if (guessedIndex !== -1 && !revealedCountries.includes(guessedIndex)) {
-      setRevealedCountries([...revealedCountries, guessedIndex]);
-      setGuess("");
-      setFilteredCountries([]);
-      setError(false);
-    } else {
-      setGuess("");
-      setError(true);
-      document.getElementById("countryInput").blur();
-      setTimeout(() => {
-        setError(false);
-        document.getElementById("countryInput").focus();
-      }, 1000);
-    }
   };
 
   const formatTime = (seconds) => {
@@ -190,7 +188,7 @@ function App() {
               : "Time's up! You couldn't guess all the countries."}
           </h3>
         )}
-        <form id="guessInput" onSubmit={handleGuess} className={error ? "shake" : ""}>
+        <form id="guessInput" onSubmit={handleGuess} className={wrongAnswer ? "shake" : ""}>
           <input
             id="countryInput"
             type="text"
@@ -199,7 +197,7 @@ function App() {
             onKeyDown={handleKeyDown}
             placeholder="Enter a country..."
             disabled={gameOver}
-            className={error ? "error" : ""}
+            className={wrongAnswer ? "wrongAnswer" : ""}
           />
           <ul className="suggestions">
             {filteredCountries.map((country, index) => (
