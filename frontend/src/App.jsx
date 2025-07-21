@@ -1,135 +1,47 @@
-import { useState, useEffect } from "react";
 import "./App.css";
-
-import { fetchGames, getTodayGame } from "./api/gameApi.js";
-import { fetchCountries } from "./api/countryApi.js";
+import { useGame } from "./hooks/useGame";
+import { useCountryInput } from "./hooks/useCountryInput.jsx";
 
 function App() {
-  const [gameTitle, setGameTitle] = useState("");
-  const [unit, setUnit] = useState("");
-  const [correctAnswers, setCorrectAnswers] = useState([]);
-  const [countriesList, setCountriesList] = useState([]);
-  const [filteredCountries, setFilteredCountries] = useState([]);
-  const [revealedCountries, setRevealedCountries] = useState([]);
-  const [revealedLost, setRevealedLost] = useState([]);
-  const [guess, setGuess] = useState("");
-  const [wrongAnswer, setWrongAnswer] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(120);
-  const [gameOver, setGameOver] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-
-  // Cargar juegos y paises
-  useEffect(() => {
-    const loadGame = async () => {
-      const todayGame = getTodayGame(await fetchGames(), 2);
-
-      if (todayGame) {
-        setGameParameters(todayGame);
-      } else {
-        console.error("No hay juegos para hoy");
-      }
-    };
-    loadGame();
-
-    const countries = fetchCountries();
-    countries.then((data) => {
-      setCountriesList(data);
-    });
-  }, []);
-
-  // Timer y fin del juego
-  useEffect(() => {
-    if (correctAnswers.length === 0) return;
-
-    if (timeLeft > 0 && revealedCountries.length < correctAnswers.length) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setGameOver(true);
-      setRevealedLost(
-        correctAnswers
-          .map((_, index) => (revealedCountries.includes(index) ? null : index))
-          .filter((index) => index !== null)
-      );
-    }
-  }, [timeLeft, revealedCountries, correctAnswers]);
+  // hooks del juego
+  const {
+    gameTitle,
+    unit,
+    correctAnswers,
+    countriesList,
+    timeLeft,
+    gameOver,
+    revealedCountries,
+    revealedLost,
+    setRevealedCountries,
+    resetGame,
+  } = useGame(2);
+  // hooks del input
+  const {
+    guess,
+    filteredCountries,
+    selectedIndex,
+    wrongAnswer,
+    handleInputChange,
+    handleKeyDown,
+    handleSelectSuggestion,
+    triggerWrongAnswer,
+    clearInput,
+  } = useCountryInput(countriesList);
 
   const handleGuess = (event) => {
     event.preventDefault();
-
-    const guessedIndex = correctAnswers.findIndex((item) =>
-      item.country.toLowerCase() === guess.toLowerCase()
+    const guessedIndex = correctAnswers.findIndex(
+      (item) => item.country.toLowerCase() === guess.toLowerCase()
     );
 
     if (guessedIndex !== -1 && !revealedCountries.includes(guessedIndex)) {
       setRevealedCountries([...revealedCountries, guessedIndex]);
-      setGuess("");
-      setFilteredCountries([]);
+      clearInput();
     } else {
-      setGuess("");
       triggerWrongAnswer();
+      clearInput();
     }
-  };
-
-  const triggerWrongAnswer = () => {
-    setWrongAnswer(true);
-    setFilteredCountries([]);
-    document.getElementById("countryInput").blur();
-    setTimeout(() => {
-      setWrongAnswer(false);
-      document.getElementById("countryInput").focus();
-    }, 500);
-  }
-  
-  const setGameParameters = (game) => {
-    setGameTitle(game.title);
-    setUnit(game.unit);
-    setCorrectAnswers(game.countries.map(({ countryName, value }) => ({
-      country: countryName,
-      value
-    })));
-  };
-
-  const handleInputChange = (event) => {
-    const value = event.target.value;
-    setGuess(value);
-    setSelectedIndex(-1);
-
-    if (value.length > 0) {
-      setFilteredCountries(
-        countriesList
-          .filter((country) =>
-            country.countryName.toLowerCase().includes(value.toLowerCase())
-          )
-          .slice(0, 5)
-      );
-    } else {
-      setFilteredCountries([]);
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (filteredCountries.length === 0) return;
-
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setSelectedIndex((prev) => prev < filteredCountries.length - 1 ? prev + 1 : 0);
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setSelectedIndex((prev) => prev > 0 ? prev - 1 : filteredCountries.length - 1);
-    } else if (event.key === "Enter") {
-      if (selectedIndex >= 0) {
-        event.preventDefault();
-        handleSelectSuggestion(filteredCountries[selectedIndex]);
-      }
-    }
-  };
-
-  const handleSelectSuggestion = (country) => {
-    setGuess(country.countryName);
-    setFilteredCountries([]);
-    setSelectedIndex(-1);
-    document.getElementById("countryInput").focus();
   };
 
   const formatTime = (seconds) => {
