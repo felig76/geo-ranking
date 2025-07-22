@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { fetchGames, getTodayGame } from "../api/gameApi.js";
-import { fetchCountries } from "../api/countryApi.js";
+import { fetchGames, getTodayGame } from "../api/gameApi.jsx";
+import { fetchCountries } from "../api/countryApi.jsx";
 
 export function useGame() {
   // parametros del juego
