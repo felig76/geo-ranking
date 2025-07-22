@@ -1,7 +1,7 @@
 import '../styles/Game.css';
 import { useGame } from "../hooks/useGame";
 import { useCountryInput } from "../hooks/useCountryInput.jsx";
-
+import GameStatus from "./Game/GameStatus.jsx";
 function Game() {
   // hooks del juego
   const {
@@ -52,23 +52,12 @@ function Game() {
 
   return (
     <div id="game">
-      <div id="gameStatus">
-        <h3>{gameTitle || "Loading..."}</h3>
-        <h3
-          id="timer"
-          className={
-            revealedCountries.length === correctAnswers.length
-              ? "victory"
-              : timeLeft === 0
-              ? "expired"
-              : timeLeft <= 10
-              ? "warning"
-              : ""
-          }
-        >
-          {formatTime(timeLeft)}
-        </h3>
-      </div>
+      <GameStatus
+        gameTitle={gameTitle}
+        timeLeft={timeLeft}
+        revealedCount={revealedCountries.length}
+        totalAnswers={correctAnswers.length}
+      />
       <ul className="list">
         {correctAnswers.map((item, index) => (
           <li
