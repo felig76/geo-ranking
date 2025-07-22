@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { fetchGames, getTodayGame } from "../api/gameApi.jsx";
 import { fetchCountries } from "../api/countryApi.jsx";
 
-export function useGame({ dayOverride = null }) {
+export function useGame() {
   // parametros del juego
   const [gameTitle, setGameTitle] = useState("");
   const [unit, setUnit] = useState("");
   const [correctAnswers, setCorrectAnswers] = useState([]);
   // estados generales del juego
   const [countriesList, setCountriesList] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(15);
   const [gameOver, setGameOver] = useState(false);
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
@@ -27,7 +27,7 @@ export function useGame({ dayOverride = null }) {
   useEffect(() => {
     const loadGame = async () => {
       try {
-        const todayGame = getTodayGame(await fetchGames(), dayOverride);
+        const todayGame = getTodayGame(await fetchGames());
         if (todayGame) {
           setGameParameters(todayGame);
         } else {
@@ -48,7 +48,7 @@ export function useGame({ dayOverride = null }) {
 
     loadGame();
     loadCountries();
-  }, [dayOverride]);
+  }, []);
 
   useEffect(() => {
     if (correctAnswers.length === 0) return;

@@ -10,13 +10,11 @@ export const fetchGames = async () => {
   }
 };
 
-export const getTodayGame = (games, dayOverride = null) => {
+export const getTodayGame = (games) => {
   if (!games.length) return null;
 
   const today = new Date();
-  const dayOfYear = dayOverride !== null
-    ? dayOverride
-    : Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
 
   const index = dayOfYear % games.length;
   return games[index];

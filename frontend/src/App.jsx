@@ -15,7 +15,7 @@ function App() {
     revealedLost,
     setRevealedCountries,
     resetGame,
-  } = useGame(2);
+  } = useGame();
   // hooks del input
   const {
     guess,
