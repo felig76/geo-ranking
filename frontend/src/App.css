@@ -2,17 +2,6 @@
   justify-items: center;
 }
 
-header {
-  display: flex;
-  align-items: center;
-}
-
-#languageSelect {
-  display: flex;
-  align-items: center;
-}
-
-
 .list {
   list-style: none;
   width: 30rem;

@@ -2,6 +2,8 @@ import "./App.css";
 import { useGame } from "./hooks/useGame";
 import { useCountryInput } from "./hooks/useCountryInput.jsx";
 
+import Header from "./components/Header.jsx";
+
 function App() {
   // hooks del juego
   const {
@@ -52,15 +54,7 @@ function App() {
 
   return (
     <div>
-      <header>
-        <h2 id="title">Geo Ranking</h2>
-        <div id="configButtons">
-          <div className="headeConfigButton" id="languageSelect">
-            <button>🇪🇸</button>
-          </div>
-          <button className="headeConfigButton" id="colorSchemeSelect">🌙</button>
-        </div>
-      </header>
+      <Header></Header>
       <div id="game">
         <div id="gameStatus">
           <h3>{gameTitle || "Loading..."}</h3>

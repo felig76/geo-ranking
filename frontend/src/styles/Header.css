@@ -1,0 +1,14 @@
+#gameHeader {
+  display: flex;
+  align-items: center;
+}
+
+#configButtons {
+  display: flex;
+  align-items: center;
+}
+
+#languageSelect {
+  display: flex;
+  align-items: center;
+}
