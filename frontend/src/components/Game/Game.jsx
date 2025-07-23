@@ -1,7 +1,7 @@
-import '../styles/Game.css';
-import { useGame } from "../hooks/useGame";
-import { useCountryInput } from "../hooks/useCountryInput.jsx";
-import GameStatus from "./Game/GameStatus.jsx";
+import './Game.css';
+import { useGame } from "../../hooks/useGame.jsx";
+import { useCountryInput } from "../../hooks/useCountryInput.jsx";
+import GameStatus from "../GameStatus/GameStatus.jsx";
 function Game() {
   // hooks del juego
   const {
@@ -44,12 +44,6 @@ function Game() {
     }
   };
 
-  const formatTime = (seconds) => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${min}:${sec.toString().padStart(2, "0")}`;
-  };
-
   return (
     <div id="game">
       <GameStatus
@@ -58,7 +52,7 @@ function Game() {
         revealedCount={revealedCountries.length}
         totalAnswers={correctAnswers.length}
       />
-      <ul className="list">
+      <ul id='topList'>
         {correctAnswers.map((item, index) => (
           <li
             key={index}
