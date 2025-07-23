@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GamePage from "./pages/GamePage.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
+import "./App.css";
 
 function App() {
   return (
