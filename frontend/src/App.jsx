@@ -1,14 +1,15 @@
-import "./App.css";
-
-import Header from "./components/Header.jsx";
-import Game from "./components/Game.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import GamePage from "./pages/GamePage.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 
 function App() {
   return (
-    <div>
-      <Header></Header>
-      <Game></Game>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/play" element={<GamePage />} />
+      </Routes>
+    </Router>
   );
 }
 
