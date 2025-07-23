@@ -2,6 +2,7 @@ import './Game.css';
 import { useGame } from "../../hooks/useGame.jsx";
 import { useCountryInput } from "../../hooks/useCountryInput.jsx";
 import GameStatus from "../GameStatus/GameStatus.jsx";
+import TopList from "../TopList/TopList.jsx";
 function Game() {
   // hooks del juego
   const {
@@ -52,20 +53,12 @@ function Game() {
         revealedCount={revealedCountries.length}
         totalAnswers={correctAnswers.length}
       />
-      <ul id='topList'>
-        {correctAnswers.map((item, index) => (
-          <li
-            key={index}
-            className={`list-item ${revealedCountries.includes(index) ? "revealed" : ""} ${revealedLost.includes(index) ? "revealedLost" : ""} ${!revealedCountries.includes(index) && !revealedLost.includes(index) ? "hidden" : ""}`}
-          >
-            {revealedCountries.includes(index) || revealedLost.includes(index) ? (
-              `Top ${index + 1} - ${item.country}: ${item.value.toLocaleString()} ${unit}`
-            ) : (
-              ""
-            )}
-          </li>
-        ))}
-      </ul>
+      <TopList
+        correctAnswers={correctAnswers}
+        revealedCountries={revealedCountries}
+        revealedLost={revealedLost}
+        unit={unit}
+      />
       {gameOver && (
         <h3 className={`game-over-message ${revealedCountries.length === correctAnswers.length ? "victory" : "lost"}`}>
           {revealedCountries.length === correctAnswers.length

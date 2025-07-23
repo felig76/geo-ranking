@@ -2,37 +2,6 @@
   justify-items: center;
 }
 
-#topList {
-  list-style: none;
-  width: 30rem;
-  justify-items: center;
-}
-
-.list-item {
-  align-content: center;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  width: 100%;
-  height: 1.75rem;
-  background-color: #131313;
-  border-radius: 5px;
-  border: 1px solid #6b6b6b;
-}
-
-.hidden {
-  background-color: #141414;
-}
-
-.revealed {
-  background-color: #012200;
-  border: 1px solid #47ff47;
-}
-
-.revealedLost {
-  background-color: #222222;
-  border: 1px solid #ff3838;
-}
-
 .game-over-message.lost {
   font-size: 1rem;
   color: #ff3838;
