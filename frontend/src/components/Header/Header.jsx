@@ -2,7 +2,7 @@ import './Header.css'
 function Header() {
   return (
     <header id="gameHeader">
-      <h2 id="title">Geo Ranking</h2>
+      <h2 id="title">Geo Ranking 🌎</h2>
       <div id="configButtons">
         <div className="headeConfigButton" id="languageSelect">
           <button>🇪🇸</button>
