@@ -10,3 +10,4 @@
 - [ ] agregar animaciones a la lista del top
 - [ ] arreglar animacion de wrong guess
 - [ ] agregar botones de pausa y de abandono
+- [ ] hacer landing page
