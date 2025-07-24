@@ -2,6 +2,7 @@
   "name": "geo-ranking-backend",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "dependencies": {

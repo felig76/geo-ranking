@@ -22,8 +22,11 @@ app.get("/", (req, res) => {
 app.use("/api/games", gameRoutes);
 app.use("/api/countries", countryRoutes);
 
-app.listen(PORT, () => {
-  console.clear();
-  connectDB();
-  console.log("API funcionando en http://localhost:"+PORT);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.clear();
+    console.log("API funcionando en http://localhost:" + PORT);
+  });
+}).catch((err) => {
+  console.error("Error al conectar a la DB:", err);
 });
