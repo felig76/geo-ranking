@@ -9,7 +9,7 @@ export function useGame() {
   const [correctAnswers, setCorrectAnswers] = useState([]);
   // estados generales del juego
   const [countriesList, setCountriesList] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [gameOver, setGameOver] = useState(false);
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
