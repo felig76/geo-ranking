@@ -77,7 +77,7 @@ function Game() {
         handleKeyDown={handleKeyDown}
         handleSelectSuggestion={handleSelectSuggestion}
         handleGuess={handleGuess}
-        resetGame={resetGame}
+        gameOver={gameOver}
       />
     </div>
   )
