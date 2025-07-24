@@ -1,16 +1,19 @@
 import './Header.css'
+
 function Header() {
   return (
-    <header id="gameHeader">
-      <h2 id="title">Geo Ranking 🌎</h2>
+    <header id="gamePageHeader">
+      <h2 id="title">GeoRanking 🌎</h2>
       <div id="configButtons">
-        <div className="headeConfigButton" id="languageSelect">
-          <button>🇪🇸</button>
+        <div className="headerConfigButton" id="languageSelect">
+          <button title="Cambiar idioma">🇪🇸</button>
         </div>
-        <button className="headeConfigButton" id="colorSchemeSelect">🌙</button>
+        <div className="headerConfigButton" id="colorSchemeSelect">
+          <button title="Cambiar tema">🌙</button>
+        </div>
       </div>
     </header>
   );
 }
 
-export default Header
+export default Header;
