@@ -25,7 +25,7 @@ app.use("/api/countries", countryRoutes);
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.clear();
-    console.log(`Conectado a MongoDB: ${conn.connection.host}`);
+    console.log(`Conectado a MongoDB: ${conn.connection.host || "localhost"}`);
   });
 }).catch((err) => {
   console.error("Error al conectar a la DB:", err);
