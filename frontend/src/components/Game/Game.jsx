@@ -38,7 +38,7 @@ function Game() {
       (item) => item.country.toLowerCase() === guess.toLowerCase()
     );
 
-    if (guessedIndex !== -1 && !revealedCountries.includes(guessedIndex)) {
+    if (guessedIndex >= 0 && !revealedCountries.includes(guessedIndex)) {
       setRevealedCountries([...revealedCountries, guessedIndex]);
       clearInput();
     } else {

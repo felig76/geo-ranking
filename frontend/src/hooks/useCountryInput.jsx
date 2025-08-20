@@ -5,7 +5,7 @@ export const useCountryInput = (countriesList) => {
   const [guess, setGuess] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [error, setError] = useState(false);
+  const [wrongAnswer, setWrongAnswer] = useState(false);
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -54,11 +54,10 @@ export const useCountryInput = (countriesList) => {
   };
 
   const triggerWrongAnswer = () => {
-    setError(true);
-    setFilteredCountries([]);
+    setWrongAnswer(true);
     document.getElementById("countryInput")?.blur();
     setTimeout(() => {
-      setError(false);
+      setWrongAnswer(false);
       document.getElementById("countryInput")?.focus();
     }, 500);
   };
@@ -67,14 +66,13 @@ export const useCountryInput = (countriesList) => {
     setGuess("");
     setFilteredCountries([]);
     setSelectedIndex(-1);
-    setError(false);
   };
 
   return {
     guess,
     filteredCountries,
     selectedIndex,
-    error,
+    wrongAnswer,
     handleInputChange,
     handleKeyDown,
     handleSelectSuggestion,
