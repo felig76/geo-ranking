@@ -55,3 +55,7 @@
 .suggestions li:hover {
   background-color: #3b3b3b;
 }
+
+.selected {
+  background-color: #3b3b3b;
+}
