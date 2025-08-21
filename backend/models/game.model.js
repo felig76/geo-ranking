@@ -20,6 +20,10 @@ const gameSchema = new mongoose.Schema({
   unit: {
     type: String,
     required: true,
+  },
+  hint: {
+    type: String,
+    required: true,
   }
 });
 
