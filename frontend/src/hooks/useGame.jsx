@@ -7,6 +7,7 @@ export function useGame() {
   const [gameTitle, setGameTitle] = useState("");
   const [unit, setUnit] = useState("");
   const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [hint, setHint] = useState("");
   // estados generales del juego
   const [countriesList, setCountriesList] = useState([]);
   const [timeLeft, setTimeLeft] = useState(120);
@@ -14,6 +15,7 @@ export function useGame() {
   const [gameOver, setGameOver] = useState(false);
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [gaveUp, setGaveUp] = useState(false);
+  const [hintUsed, setHintUsed] = useState(false);
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
   const [revealedLost, setRevealedLost] = useState([]);
@@ -51,6 +53,7 @@ export function useGame() {
       country: countryName,
       value
     })));
+    setHint(game.hint);
   };
 
   const endGame = () => {
@@ -69,8 +72,10 @@ export function useGame() {
     setGaveUp(true);
   };
 
-  const showHint = () => {
-    alert(`Hint: ${correctAnswers[revealedCountries.length].country}`);
+  const handleHint = () => {
+    if (!hintUsed) {
+      setHintUsed(true);
+    }
   };
 
   useEffect(() => {
@@ -81,13 +86,24 @@ export function useGame() {
   }, [isTimerRunning, timeLeft]);
 
   useEffect(() => {
+    if (revealedCountries.length > 0) {
+      const revealedContries = document.querySelectorAll(".revealed");
+      revealedContries.forEach((element) => {
+        element.classList.add("pop");
+      })
+    }
+  }, [revealedCountries])
+
+  useEffect(() => {
     if (correctAnswers.length === 0) return;
 
     if (revealedCountries.length === correctAnswers.length) {
       endGame();
+      setIsTimerRunning(false);
       setGameOverMessage("You guessed all the countries!");
     } else if (timeLeft === 0) {
       endGame();
+      setIsTimerRunning(false);
       setGameOverMessage("Time's up! You didn't guess all the countries.");
     } else if (gaveUp) {
       endGame();
@@ -107,7 +123,9 @@ export function useGame() {
     revealedLost,
     setRevealedCountries,
     handleGiveUp,
-    showHint,
-    gaveUp
+    gaveUp,
+    handleHint,
+    hint,
+    hintUsed
   };
 }

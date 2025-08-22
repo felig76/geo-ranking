@@ -1,7 +1,9 @@
-#gameStatus {
+#gameStatusTop {
   display: flex;
   align-items: center;
   gap: 1rem;
+  justify-content: space-between;
+
 }
 
 #timer {
@@ -27,7 +29,7 @@
   color: #47ff47;
 }
 
-#gameStatusButtonContainer {
+#gameControlContainer {
   display: flex;
   gap: 0.50rem;
 }
@@ -42,4 +44,20 @@
 }
 .gameStatusButton:hover {
   border-color: #646cff;
+}
+.gameStatusButton:disabled {
+  color: #6b6b6b;
+  cursor: default;
+}
+
+#hint {
+  font-size: 0.8rem;
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #1a1a1a;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease, color 0.2s ease;
 }

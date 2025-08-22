@@ -19,8 +19,10 @@ function Game() {
     revealedLost,
     setRevealedCountries,
     handleGiveUp,
-    showHint,
     gaveUp,
+    handleHint,
+    hint,
+    hintUsed
   } = useGame();
   // hooks del input
   const {
@@ -37,16 +39,18 @@ function Game() {
 
   const handleGuess = (event) => {
     event.preventDefault();
-    const guessedIndex = correctAnswers.findIndex(
-      (item) => item.country.toLowerCase() === guess.toLowerCase()
-    );
+    if (guess.length > 0){
+      const guessedIndex = correctAnswers.findIndex(
+        (item) => item.country.toLowerCase() === guess.toLowerCase()
+      );
 
-    if (guessedIndex >= 0 && !revealedCountries.includes(guessedIndex)) {
-      setRevealedCountries([...revealedCountries, guessedIndex]);
-      clearInput();
-    } else {
-      triggerWrongAnswer();
-      clearInput();
+      if (guessedIndex >= 0 && !revealedCountries.includes(guessedIndex)) {
+        setRevealedCountries([...revealedCountries, guessedIndex]);
+        clearInput();
+      } else {
+        triggerWrongAnswer();
+        clearInput();
+      }
     }
   };
 
@@ -58,9 +62,11 @@ function Game() {
         revealedCount={revealedCountries.length}
         totalAnswers={correctAnswers.length}
         gameOver={gameOver}
-        showHint={showHint}
         handleGiveUp={handleGiveUp}
         gaveUp={gaveUp}
+        handleHint={handleHint}
+        hint={hint}
+        hintUsed={hintUsed}
       />
       <TopList
         correctAnswers={correctAnswers}

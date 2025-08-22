@@ -8,7 +8,7 @@
 .list-item {
   display: flex;
   justify-content: center;
-  align-items: center; /* centrado vertical */
+  align-items: center;
   padding: 0.5rem;
   margin-top: 0.5rem;
   width: 100%;
@@ -19,26 +19,23 @@
 }
 
 .list-top-index {
-  /* align-self: center; -> innecesario */
   width: 3.75rem;
   padding: 0.20rem;
   background-color: #242424;
   border: 1px solid #6b6b6b;
   border-radius: 0.5rem;
   display: flex;
-  align-items: center; /* para centrar vertical dentro del botón */
+  align-items: center;
   justify-content: center;
 }
 
 .list-item-text {
-  /* align-self: center; -> innecesario */
   padding: 0.5rem;
   width: 100%;
   border-radius: 0.25rem;
   display: flex;
-  align-items: center; /* también centrado vertical en el texto */
+  align-items: center;
 }
-
 
 .hidden {
   background-color: #141414;
@@ -47,6 +44,20 @@
 .revealed {
   background-color: #012200;
   border: 1px solid #47ff47;
+}
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.revealed.pop {
+  animation: pop 0.3s ease-in-out;
 }
 
 .revealedLost {
