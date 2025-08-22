@@ -13,7 +13,7 @@ export function useGame() {
   const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [gameOver, setGameOver] = useState(false);
   const [gameOverMessage, setGameOverMessage] = useState("");
-  const [givedUp, setGivedUp] = useState(false);
+  const [gaveUp, setGaveUp] = useState(false);
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
   const [revealedLost, setRevealedLost] = useState([]);
@@ -66,7 +66,7 @@ export function useGame() {
 
   const handleGiveUp = () => {
     setIsTimerRunning(false);
-    setGivedUp(true);
+    setGaveUp(true);
   };
 
   const showHint = () => {
@@ -89,11 +89,11 @@ export function useGame() {
     } else if (timeLeft === 0) {
       endGame();
       setGameOverMessage("Time's up! You didn't guess all the countries.");
-    } else if (givedUp) {
+    } else if (gaveUp) {
       endGame();
       setGameOverMessage("You gave up! You didn't guess all the countries.");
     }
-  }, [timeLeft, revealedCountries, correctAnswers, givedUp]);
+  }, [timeLeft, revealedCountries, correctAnswers, gaveUp]);
 
   return {
     gameTitle,
@@ -108,5 +108,6 @@ export function useGame() {
     setRevealedCountries,
     handleGiveUp,
     showHint,
+    gaveUp
   };
 }

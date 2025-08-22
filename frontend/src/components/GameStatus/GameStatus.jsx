@@ -1,5 +1,5 @@
 import './GameStatus.css';
-export default function GameStatus({ gameTitle, timeLeft, revealedCount, totalAnswers, gameOver, showHint, handleGiveUp }) {
+export default function GameStatus({ gameTitle, timeLeft, revealedCount, totalAnswers, gameOver, showHint, handleGiveUp, gaveUp }) {
 	const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
@@ -18,6 +18,8 @@ export default function GameStatus({ gameTitle, timeLeft, revealedCount, totalAn
 						? "expired"
 						: timeLeft <= 10
 						? "warning"
+						: gaveUp
+						? "expired"
 						: ""
 				}
 			>

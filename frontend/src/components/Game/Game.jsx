@@ -20,6 +20,7 @@ function Game() {
     setRevealedCountries,
     handleGiveUp,
     showHint,
+    gaveUp,
   } = useGame();
   // hooks del input
   const {
@@ -59,6 +60,7 @@ function Game() {
         gameOver={gameOver}
         showHint={showHint}
         handleGiveUp={handleGiveUp}
+        gaveUp={gaveUp}
       />
       <TopList
         correctAnswers={correctAnswers}
