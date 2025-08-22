@@ -1,11 +1,12 @@
 #gameStatus {
   display: flex;
   align-items: center;
-  gap: 4rem;
+  gap: 1rem;
 }
 
 #timer {
   width: 2.6rem;
+  height: 1.8rem;
   font-weight: 500;
   padding: 0.5rem;
   background-color: #131313;
@@ -24,4 +25,21 @@
 
 #timer.victory {
   color: #47ff47;
+}
+
+#gameStatusButtonContainer {
+  display: flex;
+  gap: 0.50rem;
+}
+
+.gameStatusButton {
+  font-size: 1.4rem;
+  padding: 0.5rem;
+  color: white;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease, color 0.2s ease;
+}
+.gameStatusButton:hover {
+  border-color: #646cff;
 }

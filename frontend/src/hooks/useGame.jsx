@@ -10,19 +10,13 @@ export function useGame() {
   // estados generales del juego
   const [countriesList, setCountriesList] = useState([]);
   const [timeLeft, setTimeLeft] = useState(120);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [gameOver, setGameOver] = useState(false);
+  const [gameOverMessage, setGameOverMessage] = useState("");
+  const [givedUp, setGivedUp] = useState(false);
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
   const [revealedLost, setRevealedLost] = useState([]);
-
-  const setGameParameters = (game) => {
-    setGameTitle(game.title);
-    setUnit(game.unit);
-    setCorrectAnswers(game.countries.map(({ countryName, value }) => ({
-      country: countryName,
-      value
-    })));
-  };
 
   useEffect(() => {
     const loadGame = async () => {
@@ -49,31 +43,57 @@ export function useGame() {
     loadGame();
     loadCountries();
   }, []);
+  
+  const setGameParameters = (game) => {
+    setGameTitle(game.title);
+    setUnit(game.unit);
+    setCorrectAnswers(game.countries.map(({ countryName, value }) => ({
+      country: countryName,
+      value
+    })));
+  };
+
+  const endGame = () => {
+    setGameOver(true);
+    setRevealedLost(
+      correctAnswers
+        .map((_, index) =>
+          revealedCountries.includes(index) ? null : index
+        )
+        .filter((index) => index !== null)
+    );
+  };
+
+  const handleGiveUp = () => {
+    setIsTimerRunning(false);
+    setGivedUp(true);
+  };
+
+  const showHint = () => {
+    alert(`Hint: ${correctAnswers[revealedCountries.length].country}`);
+  };
+
+  useEffect(() => {
+    if (isTimerRunning) {
+      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isTimerRunning, timeLeft]);
 
   useEffect(() => {
     if (correctAnswers.length === 0) return;
 
-    if (timeLeft > 0 && revealedCountries.length < correctAnswers.length) {
-      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
-      return () => clearTimeout(timer);
+    if (revealedCountries.length === correctAnswers.length) {
+      endGame();
+      setGameOverMessage("You guessed all the countries!");
     } else if (timeLeft === 0) {
-      setGameOver(true);
-      setRevealedLost(
-        correctAnswers
-          .map((_, index) =>
-            revealedCountries.includes(index) ? null : index
-          )
-          .filter((index) => index !== null)
-      );
+      endGame();
+      setGameOverMessage("Time's up! You didn't guess all the countries.");
+    } else if (givedUp) {
+      endGame();
+      setGameOverMessage("You gave up! You didn't guess all the countries.");
     }
-  }, [timeLeft, revealedCountries, correctAnswers]);
-
-  const resetGame = () => {
-    setTimeLeft(120);
-    setGameOver(false);
-    setRevealedCountries([]);
-    setRevealedLost([]);
-  };
+  }, [timeLeft, revealedCountries, correctAnswers, givedUp]);
 
   return {
     gameTitle,
@@ -82,11 +102,11 @@ export function useGame() {
     countriesList,
     timeLeft,
     gameOver,
+    gameOverMessage,
     revealedCountries,
     revealedLost,
     setRevealedCountries,
-    setTimeLeft,
-    setGameOver,
-    resetGame,
+    handleGiveUp,
+    showHint,
   };
 }

@@ -14,10 +14,12 @@ function Game() {
     countriesList,
     timeLeft,
     gameOver,
+    gameOverMessage,
     revealedCountries,
     revealedLost,
     setRevealedCountries,
-    resetGame,
+    handleGiveUp,
+    showHint,
   } = useGame();
   // hooks del input
   const {
@@ -54,6 +56,9 @@ function Game() {
         timeLeft={timeLeft}
         revealedCount={revealedCountries.length}
         totalAnswers={correctAnswers.length}
+        gameOver={gameOver}
+        showHint={showHint}
+        handleGiveUp={handleGiveUp}
       />
       <TopList
         correctAnswers={correctAnswers}
@@ -65,7 +70,7 @@ function Game() {
         <h3 className={`game-over-message ${revealedCountries.length === correctAnswers.length ? "victory" : "lost"}`}>
           {revealedCountries.length === correctAnswers.length
             ? "You guessed all the countries!"
-            : "Time's up! You couldn't guess all the countries."}
+            : gameOverMessage}
         </h3>
       )}
       <CountryInput
