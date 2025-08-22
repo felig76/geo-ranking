@@ -42,9 +42,16 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+button:active {
+  animation: pressColorAnimation 0.3s ease-in-out;
+}
+@keyframes pressColorAnimation {
+  0% {
+    background-color: #303030;
+  }
+  100% {
+    background-color: #1a1a1a;
+  }
 }
 
 @media (prefers-color-scheme: light) {
