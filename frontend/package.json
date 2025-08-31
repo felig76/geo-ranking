@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "vite": "^7.1.3",
+    "@vitejs/plugin-react": "^4.6.0",
     "axios": "^1.10.0",
     "geo-ranking-front": "file:",
     "react": "^19.1.0",
