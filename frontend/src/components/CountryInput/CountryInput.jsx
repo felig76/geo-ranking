@@ -24,7 +24,7 @@ function CountryInput({ guess, filteredCountries, selectedIndex, wrongAnswer, ha
 					</li>
 				))}
 			</ul>
-			<button type="submit" disabled={gameOver}>Guess</button>
+			<button id="guessButton" type="submit" disabled={gameOver}>Guess</button>
 		</form>
 	);
 }
