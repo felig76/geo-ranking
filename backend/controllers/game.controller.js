@@ -7,7 +7,7 @@ export const postGames = async (req, res) => {
 
     try{
       await newGame.save();
-      res.status(201).json({ success: true, data: newGame });
+      res.status(200).json({ success: true, data: newGame });
     }
     catch (error) {
       console.error("Error al guardar el juego:", error.message);
