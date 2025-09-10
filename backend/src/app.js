@@ -5,6 +5,7 @@ import cors from "cors";
 import gameRoutes from "./routes/game.route.js";
 import countryRoutes from "./routes/country.route.js";
 import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 import { connectDB } from "./config/db.js";
 import path from "path";
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use("/api/games", gameRoutes);
 app.use("/api/countries", countryRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes)
 
 if(process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirnameIndex, "/frontend/dist")));
