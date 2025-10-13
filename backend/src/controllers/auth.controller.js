@@ -20,8 +20,8 @@ export const register = async (req, res) => {
             id: savedUser._id,
             username: savedUser.username,
             email: savedUser.email,
-            createdAt: savedUser.createdAt,
-            updatedAt: savedUser.updatedAt
+            lastLogin: savedUser.lastLogin,
+            stats: savedUser.stats,
         } });
         
     } catch (error) {
@@ -43,6 +43,9 @@ export const login = async (req, res) => {
             return res.status(401).json({ success: false, message: "Invalid credentials" });
         }
 
+        user.lastLogin = new Date();
+        await user.save();
+
         const token = await generateAccessToken({ id: user._id });
 
         res.cookie("token", token);
@@ -50,8 +53,8 @@ export const login = async (req, res) => {
             id: user._id,
             username: user.username,
             email: user.email,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
+            lastLogin: user.lastLogin,
+            stats: user.stats,
         } });
         
     } catch (error) {
@@ -63,17 +66,4 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ success: true, message: "Logout successful" });
-}
-
-export const profile = async (req, res) => {
-    const user = await User.findById(req.user.id)
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
-
-    res.status(200).json({ success: true, data: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-    } });
 }

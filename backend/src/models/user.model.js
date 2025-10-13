@@ -46,4 +46,12 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Esto hace que nunca se devuelva la contraseña en res.json
+userSchema.set('toJSON', {
+  transform: (doc, ret, options) => {
+    delete ret.password;
+    return ret;
+  }
+});
+
 export default mongoose.model("User", userSchema);
