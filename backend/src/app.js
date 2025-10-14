@@ -1,0 +1,48 @@
+import express from "express";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import gameRoutes from "./routes/game.route.js";
+import countryRoutes from "./routes/country.route.js";
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
+
+import { connectDB } from "./config/db.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirnameEnv = path.dirname(__filename);
+dotenv.config( { path: path.resolve(__dirnameEnv, "../../.env") } );
+
+const __dirnameIndex = path.resolve();
+const PORT = process.env.PORT || 5000;
+
+const app = express();
+app.use(express.json());
+// CORS configuration: in development allow FRONTEND_ORIGIN_DEV; in production, reflect origin (same-origin when serving frontend)
+const isProd = process.env.NODE_ENV === "production";
+const corsOptions = isProd
+  ? { origin: true, credentials: true }
+  : { origin: process.env.FRONTEND_ORIGIN_DEV || "http://localhost:5173", credentials: true };
+app.use(cors(corsOptions));
+app.use(morgan("dev"));
+app.use(cookieParser());
+
+app.use("/api/games", gameRoutes);
+app.use("/api/countries", countryRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes)
+
+if(process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirnameIndex, "/frontend/dist")));
+  app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.resolve(__dirnameIndex, "frontend", "dist", "index.html"));
+});
+}
+
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`Server running on http://localhost:${PORT}`);
+});

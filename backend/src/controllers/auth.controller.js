@@ -1,0 +1,85 @@
+import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+import { generateAccessToken } from "../libs/jwt.js";
+
+export const register = async (req, res) => {
+    const { email, password, username } = req.body;
+    try{
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword
+        });
+        
+        const savedUser = await newUser.save();
+        const token = await generateAccessToken({ id: savedUser._id });
+        const isProd = process.env.NODE_ENV === "production";
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? "lax" : "lax",
+            path: "/",
+        });
+        res.status(201).json({ success: true, data: {
+            id: savedUser._id,
+            username: savedUser.username,
+            email: savedUser.email,
+            lastLogin: savedUser.lastLogin,
+            stats: savedUser.stats,
+        } });
+        
+    } catch (error) {
+        console.error("Error saving user:", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }    
+};
+
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+    try{
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ success: false, message: "Invalid credentials" });
+        }
+
+        user.lastLogin = new Date();
+        await user.save();
+
+        const token = await generateAccessToken({ id: user._id });
+        const isProd = process.env.NODE_ENV === "production";
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? "lax" : "lax",
+            path: "/",
+        });
+        res.status(201).json({ success: true, data: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            lastLogin: user.lastLogin,
+            stats: user.stats,
+        } });
+        
+    } catch (error) {
+        console.error("Error logging in:", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }    
+};
+
+export const logout = (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? "lax" : "lax",
+        path: "/",
+    });
+    res.status(200).json({ success: true, message: "Logout successful" });
+}

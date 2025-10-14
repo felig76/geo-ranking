@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { fetchGames, getTodayGame } from "../api/gameApi.jsx";
 import { fetchCountries } from "../api/countryApi.jsx";
+import { submitDailyGame } from "../api/userApi.jsx";
 
-export function useGame() {
-  // parametros del juego
+export function useGame(user) {
+  // parámetros del juego
   const [gameTitle, setGameTitle] = useState("");
   const [unit, setUnit] = useState("");
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [hint, setHint] = useState("");
-  // estados generales del juego
+
+  // estados generales
   const [countriesList, setCountriesList] = useState([]);
   const [timeLeft, setTimeLeft] = useState(120);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
@@ -16,36 +18,60 @@ export function useGame() {
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [gaveUp, setGaveUp] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
+
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
   const [revealedLost, setRevealedLost] = useState([]);
 
+  const todayKey = "lastPlay";
+
+  // Cargar juego y países
   useEffect(() => {
     const loadGame = async () => {
       try {
         const todayGame = getTodayGame(await fetchGames());
-        if (todayGame) {
-          setGameParameters(todayGame);
-        } else {
-          console.error("No hay juegos para hoy");
+        if (!todayGame) {
+          console.error("No game for today");
+          return;
         }
+
+        setGameParameters(todayGame);
+
+        // check if the user already played today
+        let playedToday = false;
+
+        if (user) {
+          playedToday = user.stats.dailyPlays.some(
+            play => new Date(play.date).toDateString() === new Date().toDateString()
+          );
+        } else {
+          playedToday = localStorage.getItem(todayKey) === new Date().toDateString();
+        }
+
+        if (playedToday) {
+          setGameOver(true);
+          setIsTimerRunning(false);
+          setGameOverMessage("You already played today");
+        }
+
       } catch (error) {
-        console.error("Error al cargar el juego:", error);
+        console.error("Error loading game:", error);
       }
     };
+
     const loadCountries = async () => {
       try {
         const countries = await fetchCountries();
         setCountriesList(countries);
       } catch (error) {
-        console.error("Error al cargar países:", error);
+        console.error("Error loading countries:", error);
       }
     };
 
     loadGame();
     loadCountries();
-  }, []);
-  
+  }, [user]);
+
   const setGameParameters = (game) => {
     setGameTitle(game.title);
     setUnit(game.unit);
@@ -56,57 +82,54 @@ export function useGame() {
     setHint(game.hint);
   };
 
-  const endGame = () => {
+  const endGame = async (score) => {
     setGameOver(true);
     setRevealedLost(
       correctAnswers
-        .map((_, index) =>
-          revealedCountries.includes(index) ? null : index
-        )
-        .filter((index) => index !== null)
+        .map((_, i) => (revealedCountries.includes(i) ? null : i))
+        .filter(i => i !== null)
     );
+
+    setIsTimerRunning(false);
+
+    if (user) {
+      try {
+        await submitDailyGame(score); // actualizar stats en backend
+      } catch (err) {
+        console.error("Error saving match:", err);
+      }
+    } else {
+      localStorage.setItem(todayKey, new Date().toDateString());
+    }
   };
 
   const handleGiveUp = () => {
-    setIsTimerRunning(false);
     setGaveUp(true);
+    endGame(0);
   };
 
   const handleHint = () => {
-    if (!hintUsed) {
-      setHintUsed(true);
-    }
+    if (!hintUsed) setHintUsed(true);
   };
 
   useEffect(() => {
     if (isTimerRunning) {
-      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+      const timer = setTimeout(() => setTimeLeft(prev => prev - 1), 1000);
       return () => clearTimeout(timer);
     }
   }, [isTimerRunning, timeLeft]);
 
   useEffect(() => {
-    if (revealedCountries.length > 0) {
-      const revealedContries = document.querySelectorAll(".revealed");
-      revealedContries.forEach((element) => {
-        element.classList.add("pop");
-      })
-    }
-  }, [revealedCountries])
-
-  useEffect(() => {
     if (correctAnswers.length === 0) return;
 
     if (revealedCountries.length === correctAnswers.length) {
-      endGame();
-      setIsTimerRunning(false);
+      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0));
       setGameOverMessage("You guessed all the countries!");
     } else if (timeLeft === 0) {
-      endGame();
-      setIsTimerRunning(false);
+      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0));
       setGameOverMessage("Time's up! You didn't guess all the countries.");
     } else if (gaveUp) {
-      endGame();
+      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0));
       setGameOverMessage("You gave up! You didn't guess all the countries.");
     }
   }, [timeLeft, revealedCountries, correctAnswers, gaveUp]);

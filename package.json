@@ -1,8 +1,8 @@
 {
   "scripts": {
     "install": "cd backend && npm install && cd ../frontend && npm install",
-    "start": "node backend/server.js",
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "start": "node backend/src/app.js",
+    "dev": "cd frontend && npm run dev",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "devDependencies": {
