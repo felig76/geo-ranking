@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
         const userData = await fetchUser(); // retorna null si no hay token
         setUser(userData);
       } catch (error) {
-        console.error("No se pudo cargar el usuario", error);
+        console.error("Failed to load user", error);
         setUser(null);
       } finally {
         setLoading(false);

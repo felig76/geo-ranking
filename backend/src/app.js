@@ -21,10 +21,12 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:5173", // el front
-  credentials: true                // habilita cookies / auth headers
-}));
+// CORS configuration: in development allow FRONTEND_ORIGIN_DEV; in production, reflect origin (same-origin when serving frontend)
+const isProd = process.env.NODE_ENV === "production";
+const corsOptions = isProd
+  ? { origin: true, credentials: true }
+  : { origin: process.env.FRONTEND_ORIGIN_DEV || "http://localhost:5173", credentials: true };
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(cookieParser());
 

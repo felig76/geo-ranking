@@ -56,3 +56,52 @@
   background-color: #454cc92f;
   color: white;
 }
+
+.ctaRow {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ctaAuth {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #4040a0;
+  color: #d8dcff;
+  text-decoration: none;
+  background: #111123b0;
+}
+
+.secondaryButton:hover {
+  background: #19193a9e;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 0.75rem 1.1rem;
+  border-radius: 10px;
+  border: none;
+  color: #0b0b0b;
+  background: #1db954;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.primaryButton:hover {
+  filter: brightness(1.05);
+}
+
+.welcomeText {
+  font-size: 1rem;
+  opacity: 0.9;
+}

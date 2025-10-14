@@ -14,8 +14,13 @@ export const register = async (req, res) => {
         
         const savedUser = await newUser.save();
         const token = await generateAccessToken({ id: savedUser._id });
-
-        res.cookie("token", token);
+        const isProd = process.env.NODE_ENV === "production";
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? "lax" : "lax",
+            path: "/",
+        });
         res.status(201).json({ success: true, data: {
             id: savedUser._id,
             username: savedUser.username,
@@ -25,7 +30,7 @@ export const register = async (req, res) => {
         } });
         
     } catch (error) {
-        console.error("Error al guardar el usuario:", error.message);
+        console.error("Error saving user:", error.message);
         res.status(500).json({ success: false, message: "Server Error" });
     }    
 };
@@ -47,8 +52,13 @@ export const login = async (req, res) => {
         await user.save();
 
         const token = await generateAccessToken({ id: user._id });
-
-        res.cookie("token", token);
+        const isProd = process.env.NODE_ENV === "production";
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? "lax" : "lax",
+            path: "/",
+        });
         res.status(201).json({ success: true, data: {
             id: user._id,
             username: user.username,
@@ -58,12 +68,18 @@ export const login = async (req, res) => {
         } });
         
     } catch (error) {
-        console.error("Error al guardar el usuario:", error.message);
+        console.error("Error logging in:", error.message);
         res.status(500).json({ success: false, message: "Server Error" });
     }    
 };
 
 export const logout = (req, res) => {
-    res.clearCookie("token");
+    const isProd = process.env.NODE_ENV === "production";
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? "lax" : "lax",
+        path: "/",
+    });
     res.status(200).json({ success: true, message: "Logout successful" });
 }

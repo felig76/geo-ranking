@@ -37,7 +37,7 @@ export function useGame(user) {
 
         setGameParameters(todayGame);
 
-        // comrpobar si el usuario ya jugo hoy
+        // check if the user already played today
         let playedToday = false;
 
         if (user) {
@@ -55,7 +55,7 @@ export function useGame(user) {
         }
 
       } catch (error) {
-        console.error("Error al cargar el juego:", error);
+        console.error("Error loading game:", error);
       }
     };
 
@@ -64,7 +64,7 @@ export function useGame(user) {
         const countries = await fetchCountries();
         setCountriesList(countries);
       } catch (error) {
-        console.error("Error al cargar países:", error);
+        console.error("Error loading countries:", error);
       }
     };
 
@@ -96,7 +96,7 @@ export function useGame(user) {
       try {
         await submitDailyGame(score); // actualizar stats en backend
       } catch (err) {
-        console.error("Error al guardar partida:", err);
+        console.error("Error saving match:", err);
       }
     } else {
       localStorage.setItem(todayKey, new Date().toDateString());

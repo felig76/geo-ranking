@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.PROD
+  ? ""
+  : (import.meta.env.VITE_API_URL || "http://localhost:5000");
 
 // obtener usuario logueado
 export const fetchUser = async () => {
@@ -26,7 +28,7 @@ export const fetchUser = async () => {
 // actualizar usuario
 export const updateUser = async (updates) => {
   try {
-    const { data } = await axios.patch(`${API_URL}/me`, updates, { withCredentials: true });
+    const { data } = await axios.patch(`${API_URL}/api/user/me`, updates, { withCredentials: true });
     return data.success ? data.data : null;
   } catch (err) {
     console.error("Error updating user:", err);
@@ -37,7 +39,7 @@ export const updateUser = async (updates) => {
 // enviar partida diaria
 export const submitDailyGame = async (score) => {
   try {
-    const { data } = await axios.post(`${API_URL}/play`, { score }, { withCredentials: true });
+    const { data } = await axios.post(`${API_URL}/api/user/play`, { score }, { withCredentials: true });
     return data.success ? data.data : null;
   } catch (err) {
     console.error("Error submitting daily game:", err);

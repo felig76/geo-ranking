@@ -18,6 +18,7 @@
 #configButtons {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
 .headerConfigButton button {
@@ -32,4 +33,44 @@
 .headerConfigButton button:hover {
   transform: scale(1.1);
   color: #1db954;
+}
+
+.authActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.authLink {
+  color: #ddd;
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.authLink:hover {
+  color: #fff;
+  border-color: #2a2a2a;
+  background: #1a1a1a;
+}
+
+.authPrimary {
+  background: #1db954;
+  color: #0b0b0b;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.authPrimary:hover {
+  filter: brightness(1.05);
+}
+
+.authUser {
+  font-size: 0.95rem;
+  opacity: 0.85;
 }
