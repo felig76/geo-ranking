@@ -1,4 +1,5 @@
 import './Game.css';
+import { useAuth } from "../../hooks/useAuth.jsx";
 import { useGame } from "../../hooks/useGame.jsx";
 import { useCountryInput } from "../../hooks/useCountryInput.jsx";
 import GameStatus from "../GameStatus/GameStatus.jsx";
@@ -6,7 +7,8 @@ import TopList from "../TopList/TopList.jsx";
 import CountryInput from "../CountryInput/CountryInput.jsx";
 
 function Game() {
-  // hooks del juego
+  const { user, loading } = useAuth();
+  
   const {
     gameTitle,
     unit,
@@ -23,7 +25,8 @@ function Game() {
     handleHint,
     hint,
     hintUsed
-  } = useGame();
+  } = useGame(user);
+
   // hooks del input
   const {
     guess,
@@ -53,6 +56,8 @@ function Game() {
       }
     }
   };
+
+  if (loading) return <p>Loading user...</p>;
 
   return (
     <div id="game">
@@ -93,7 +98,7 @@ function Game() {
         gameOver={gameOver}
       />
     </div>
-  )
+  );
 }
 
-export default Game
+export default Game;
