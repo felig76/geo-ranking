@@ -65,7 +65,7 @@ export function useGame(user) {
             }
             if (existing.outcome === 'win') setGameOverMessage("You guessed all the countries!");
             else if (existing.outcome === 'timeout') setGameOverMessage("Time's up! You didn't guess all the countries.");
-            else if (existing.outcome === 'gaveup') setGameOverMessage("You gave up! You didn't guess all the countries.");
+            else if (existing.outcome === 'gaveup') { setGameOverMessage("You gave up! You didn't guess all the countries."); setGaveUp(true); }
             else setGameOverMessage("You already played today");
           }
         } else {
@@ -84,7 +84,7 @@ export function useGame(user) {
             }
             if (parsed.outcome === 'win') setGameOverMessage("You guessed all the countries!");
             else if (parsed.outcome === 'timeout') setGameOverMessage("Time's up! You didn't guess all the countries.");
-            else if (parsed.outcome === 'gaveup') setGameOverMessage("You gave up! You didn't guess all the countries.");
+            else if (parsed.outcome === 'gaveup') { setGameOverMessage("You gave up! You didn't guess all the countries."); setGaveUp(true); }
             else setGameOverMessage("You already played today");
           }
         }
