@@ -37,9 +37,9 @@ export const updateUser = async (updates) => {
 };
 
 // enviar partida diaria
-export const submitDailyGame = async (score) => {
+export const submitDailyGame = async (payload) => {
   try {
-    const { data } = await axios.post(`${API_URL}/api/user/play`, { score }, { withCredentials: true });
+    const { data } = await axios.post(`${API_URL}/api/user/play`, payload, { withCredentials: true });
     return data.success ? data.data : null;
   } catch (err) {
     console.error("Error submitting daily game:", err);
