@@ -1,0 +1,102 @@
+.userPageContainer {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.userHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.userIdentity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatarPlaceholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #202020;
+  color: #cdd9e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border: 1px solid #2a2a2a;
+}
+
+.identityText h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.identityText .muted {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  padding: 0.4rem 0.8rem;
+  background: #1f2937;
+  color: #d1d5db;
+  border: 1px solid #2b3545;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.actionButton:hover { border-color: #3b82f6; }
+
+.dangerButton {
+  padding: 0.4rem 0.8rem;
+  background: #1f2937;
+  color: #ef4444;
+  border: 1px solid #2b3545;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.dangerButton:hover { border-color: #ef4444; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.card {
+  background: #0f1115;
+  border: 1px solid #1f2430;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0b0d11;
+  border: 1px solid #1b202b;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+}
+
+.statItem .label { opacity: 0.7; }
+.statItem .value { font-weight: 600; }
+
+.chartContainer { margin-top: 0.5rem; }
+.emptyChart { opacity: 0.7; font-size: 0.9rem; }

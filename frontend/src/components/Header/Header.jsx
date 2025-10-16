@@ -17,7 +17,7 @@ function Header() {
 
   return (
     <header id="gamePageHeader">
-      <h2 id="title">GeoRanking 🌎</h2>
+      <h2 id="title"><Link to="/">GeoRanking 🌎</Link></h2>
       <div id="configButtons">
         <div className="headerConfigButton" id="languageSelect">
           <button title="Change language"></button>
@@ -32,7 +32,7 @@ function Header() {
           </div>
         ) : (
           <div className="authActions">
-            <span className="authUser">{user.username}</span>
+            <Link className="authUserLink" to="/user">{user.username} <span className="openIcon">↗</span></Link>
             <button className="authPrimary" onClick={onLogout}>Logout</button>
           </div>
         )}
