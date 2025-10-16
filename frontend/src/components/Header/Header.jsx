@@ -17,7 +17,7 @@ function Header() {
 
   return (
     <header id="gamePageHeader">
-      <h2 id="title"><Link to="/">GeoRanking 🌎</Link></h2>
+      <h2 id="title"><a href="/">GeoRanking 🌎</a></h2>
       <div id="configButtons">
         <div className="headerConfigButton" id="languageSelect">
           <button title="Change language"></button>
