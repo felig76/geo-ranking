@@ -57,7 +57,7 @@ function Game() {
     }
   };
 
-  if (loading) return <p>Loading user...</p>;
+  if (loading) return;
 
   return (
     <div id="game">
