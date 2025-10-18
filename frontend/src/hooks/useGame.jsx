@@ -9,6 +9,7 @@ export function useGame(user) {
   const [unit, setUnit] = useState("");
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [hint, setHint] = useState("");
+  const [gameId, setGameId] = useState(null);
 
   // estados generales
   const [countriesList, setCountriesList] = useState([]);
@@ -22,36 +23,70 @@ export function useGame(user) {
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
   const [revealedLost, setRevealedLost] = useState([]);
-
-  const todayKey = "lastPlay";
+  const START_TIME = 120;
 
   // Cargar juego y países
   useEffect(() => {
     const loadGame = async () => {
       try {
-        const todayGame = getTodayGame(await fetchGames());
+        const games = await fetchGames();
+        const todayGame = getTodayGame(games);
         if (!todayGame) {
           console.error("No game for today");
           return;
         }
 
         setGameParameters(todayGame);
+        setGameId(todayGame._id || null);
 
         // check if the user already played today
-        let playedToday = false;
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const dateISO = new Date(today.getTime() - today.getTimezoneOffset()*60000).toISOString().slice(0,10);
 
         if (user) {
-          playedToday = user.stats.dailyPlays.some(
-            play => new Date(play.date).toDateString() === new Date().toDateString()
-          );
+          const existing = (user.stats?.dailyPlays || []).find(play => {
+            const d = new Date(play.date); d.setHours(0,0,0,0);
+            const sameDay = d.getTime() === today.getTime();
+            const sameGame = todayGame._id && play.gameId ? String(play.gameId) === String(todayGame._id) : true;
+            return sameDay && sameGame;
+          });
+          if (existing) {
+            setGameOver(true);
+            setIsTimerRunning(false);
+            setHintUsed(Boolean(existing.hintUsed));
+            const savedGuesses = Array.isArray(existing.guesses) ? existing.guesses : [];
+            setRevealedCountries(savedGuesses);
+            const savedMissed = Array.isArray(existing.missed) ? existing.missed : [];
+            setRevealedLost(savedMissed);
+            if (typeof existing.timeTaken === 'number') {
+              const remaining = Math.max(0, START_TIME - existing.timeTaken);
+              setTimeLeft(remaining);
+            }
+            if (existing.outcome === 'win') setGameOverMessage("You guessed all the countries!");
+            else if (existing.outcome === 'timeout') setGameOverMessage("Time's up! You didn't guess all the countries.");
+            else if (existing.outcome === 'gaveup') { setGameOverMessage("You gave up! You didn't guess all the countries."); setGaveUp(true); }
+            else setGameOverMessage("You already played today");
+          }
         } else {
-          playedToday = localStorage.getItem(todayKey) === new Date().toDateString();
-        }
-
-        if (playedToday) {
-          setGameOver(true);
-          setIsTimerRunning(false);
-          setGameOverMessage("You already played today");
+          const key = `dailyPlay:${dateISO}:${todayGame._id || 'nogame'}`;
+          const saved = localStorage.getItem(key);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            setGameOver(true);
+            setIsTimerRunning(false);
+            setHintUsed(Boolean(parsed.hintUsed));
+            setRevealedCountries(Array.isArray(parsed.guesses) ? parsed.guesses : []);
+            setRevealedLost(Array.isArray(parsed.missed) ? parsed.missed : []);
+            if (typeof parsed.timeTaken === 'number') {
+              const remaining = Math.max(0, START_TIME - parsed.timeTaken);
+              setTimeLeft(remaining);
+            }
+            if (parsed.outcome === 'win') setGameOverMessage("You guessed all the countries!");
+            else if (parsed.outcome === 'timeout') setGameOverMessage("Time's up! You didn't guess all the countries.");
+            else if (parsed.outcome === 'gaveup') { setGameOverMessage("You gave up! You didn't guess all the countries."); setGaveUp(true); }
+            else setGameOverMessage("You already played today");
+          }
         }
 
       } catch (error) {
@@ -82,7 +117,7 @@ export function useGame(user) {
     setHint(game.hint);
   };
 
-  const endGame = async (score) => {
+  const endGame = async (score, outcome) => {
     setGameOver(true);
     setRevealedLost(
       correctAnswers
@@ -94,18 +129,49 @@ export function useGame(user) {
 
     if (user) {
       try {
-        await submitDailyGame(score); // actualizar stats en backend
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const dateISO = new Date(today.getTime() - today.getTimezoneOffset()*60000).toISOString().slice(0,10);
+        const payload = {
+          score,
+          gameId,
+          outcome,
+          timeTaken: START_TIME - timeLeft,
+          hintUsed,
+          guesses: revealedCountries,
+          missed: correctAnswers
+            .map((_, i) => (revealedCountries.includes(i) ? null : i))
+            .filter(i => i !== null),
+          date: dateISO
+        };
+        await submitDailyGame(payload); // actualizar stats en backend
       } catch (err) {
         console.error("Error saving match:", err);
       }
     } else {
-      localStorage.setItem(todayKey, new Date().toDateString());
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const dateISO = new Date(today.getTime() - today.getTimezoneOffset()*60000).toISOString().slice(0,10);
+      const key = `dailyPlay:${dateISO}:${gameId || 'nogame'}`;
+      const payload = {
+        score,
+        gameId,
+        outcome,
+        timeTaken: START_TIME - timeLeft,
+        hintUsed,
+        guesses: revealedCountries,
+        missed: correctAnswers
+          .map((_, i) => (revealedCountries.includes(i) ? null : i))
+          .filter(i => i !== null),
+        date: dateISO
+      };
+      localStorage.setItem(key, JSON.stringify(payload));
     }
   };
 
   const handleGiveUp = () => {
     setGaveUp(true);
-    endGame(0);
+    endGame(0, 'gaveup');
   };
 
   const handleHint = () => {
@@ -123,13 +189,13 @@ export function useGame(user) {
     if (correctAnswers.length === 0) return;
 
     if (revealedCountries.length === correctAnswers.length) {
-      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0));
+      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0), 'win');
       setGameOverMessage("You guessed all the countries!");
     } else if (timeLeft === 0) {
-      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0));
+      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0), 'timeout');
       setGameOverMessage("Time's up! You didn't guess all the countries.");
     } else if (gaveUp) {
-      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0));
+      endGame(revealedCountries.reduce((sum, i) => sum + correctAnswers[i].value, 0), 'gaveup');
       setGameOverMessage("You gave up! You didn't guess all the countries.");
     }
   }, [timeLeft, revealedCountries, correctAnswers, gaveUp]);

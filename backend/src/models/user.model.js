@@ -37,6 +37,13 @@ const userSchema = new mongoose.Schema(
           {
             date: { type: Date, required: true },
             score: { type: Number, required: true },
+
+            gameId: { type: mongoose.Schema.Types.ObjectId, ref: "Game" },
+            outcome: { type: String, enum: ["win", "timeout", "gaveup"], default: undefined },
+            timeTaken: { type: Number, default: undefined },
+            hintUsed: { type: Boolean, default: undefined },
+            guesses: { type: [Number], default: undefined },
+            missed: { type: [Number], default: undefined },
           },
         ],
         default: [],

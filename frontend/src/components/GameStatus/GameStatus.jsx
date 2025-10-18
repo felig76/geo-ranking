@@ -15,12 +15,14 @@ export default function GameStatus({ gameTitle, timeLeft, revealedCount, totalAn
 					className={
 						revealedCount === totalAnswers
 							? "victory"
+							: gameOver
+							? "expired"
 							: timeLeft === 0
+							? "expired"
+							: gaveUp
 							? "expired"
 							: timeLeft <= 10
 							? "warning"
-							: gaveUp
-							? "expired"
 							: ""
 					}
 				>

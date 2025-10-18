@@ -13,7 +13,7 @@ export const patchUser = async (req, res) => {
 }
 
 export const submitDailyGame = async (req, res) => {
-  const { score } = req.body;
+  const { score, gameId, outcome, timeTaken, hintUsed, guesses, missed } = req.body;
   const user = await User.findById(req.user.id);
   if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
@@ -24,13 +24,25 @@ export const submitDailyGame = async (req, res) => {
   const playedToday = user.stats.dailyPlays.some(play => {
     const playDate = new Date(play.date);
     playDate.setHours(0,0,0,0);
-    return playDate.getTime() === today.getTime();
+    const sameDay = playDate.getTime() === today.getTime();
+    if (!sameDay) return false;
+    if (gameId && play.gameId) return String(play.gameId) === String(gameId);
+    return sameDay;
   });
 
   if (playedToday) return res.status(400).json({ success: false, message: "Already played today" });
 
   // Agregar la partida del día
-  user.stats.dailyPlays.push({ date: today, score });
+  user.stats.dailyPlays.push({
+    date: today,
+    score,
+    gameId: gameId || undefined,
+    outcome: outcome || undefined,
+    timeTaken: typeof timeTaken === 'number' ? timeTaken : undefined,
+    hintUsed: typeof hintUsed === 'boolean' ? hintUsed : undefined,
+    guesses: Array.isArray(guesses) ? guesses : undefined,
+    missed: Array.isArray(missed) ? missed : undefined,
+  });
   user.stats.gamesPlayed += 1;
   user.stats.highestScore = Math.max(user.stats.highestScore, score);
 

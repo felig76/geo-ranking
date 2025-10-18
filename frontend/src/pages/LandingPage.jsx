@@ -27,7 +27,7 @@ function LandingPage() {
             </div>
           ) : (
             <div className="ctaAuth">
-              <span className="welcomeText">Hello, {user.username}</span>
+              <Link className="welcomeLink" to="/user">Hello, {user.username} <span className="openIcon">↗</span></Link>
               <button className="primaryButton" onClick={onLogout}>Logout</button>
             </div>
           )}
