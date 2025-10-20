@@ -19,6 +19,7 @@ export function useGame(user) {
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [gaveUp, setGaveUp] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
+  const [gameLoading, setGameLoading] = useState(true);
 
   // revealed
   const [revealedCountries, setRevealedCountries] = useState([]);
@@ -103,8 +104,13 @@ export function useGame(user) {
       }
     };
 
-    loadGame();
-    loadCountries();
+    (async () => {
+      try {
+        await Promise.all([loadGame(), loadCountries()]);
+      } finally {
+        setGameLoading(false);
+      }
+    })();
   }, [user]);
 
   const setGameParameters = (game) => {
@@ -215,6 +221,7 @@ export function useGame(user) {
     gaveUp,
     handleHint,
     hint,
-    hintUsed
+    hintUsed,
+    gameLoading
   };
 }
