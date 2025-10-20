@@ -1,13 +1,16 @@
 import './Game.css';
+import { useState, useEffect } from 'react';
 import { useAuth } from "../../hooks/useAuth.jsx";
 import { useGame } from "../../hooks/useGame.jsx";
 import { useCountryInput } from "../../hooks/useCountryInput.jsx";
 import GameStatus from "../GameStatus/GameStatus.jsx";
 import TopList from "../TopList/TopList.jsx";
 import CountryInput from "../CountryInput/CountryInput.jsx";
+import ResultsModal from "../ResultsModal/ResultsModal.jsx";
 
 function Game() {
   const { user, loading } = useAuth();
+  const [showResults, setShowResults] = useState(false);
   
   const {
     gameTitle,
@@ -24,7 +27,8 @@ function Game() {
     gaveUp,
     handleHint,
     hint,
-    hintUsed
+    hintUsed,
+    gameLoading
   } = useGame(user);
 
   // hooks del input
@@ -57,7 +61,13 @@ function Game() {
     }
   };
 
-  if (loading) return;
+  useEffect(() => {
+    if (gameOver) {
+      setShowResults(true);
+    }
+  }, [gameOver]);
+
+  if (loading || gameLoading) return;
 
   return (
     <div id="game">
@@ -86,6 +96,19 @@ function Game() {
             : gameOverMessage}
         </h3>
       )}
+      {gameOver && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+          <button onClick={() => setShowResults(true)}>View results</button>
+        </div>
+      )}
+      <ResultsModal
+        isOpen={showResults}
+        onClose={() => setShowResults(false)}
+        totalItems={correctAnswers.length}
+        revealedIndices={revealedCountries}
+        user={user}
+        unit={unit}
+      />
       <CountryInput
         guess={guess}
         filteredCountries={filteredCountries}
