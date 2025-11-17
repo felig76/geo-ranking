@@ -47,7 +47,7 @@ export function useGame(user) {
           top: (todayGame.options && todayGame.options.topDefault) || 10,
         });
         if (run && Array.isArray(run.ranking)) {
-          setCorrectAnswers(run.ranking.map((r) => ({ country: r.country, value: r.value })));
+          setCorrectAnswers(run.ranking.map((r) => ({ country: r.country, value: r.value, iso2: r.iso2 })));
           // ensure unit/hint/title from backend if needed
           if (run.game) {
             setUnit(run.game.unit || todayGame.unit || "");

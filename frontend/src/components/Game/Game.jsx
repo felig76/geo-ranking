@@ -48,8 +48,11 @@ function Game() {
   const handleGuess = (event) => {
     event.preventDefault();
     if (guess.length > 0){
+      // Map displayed common name to WB official name if available
+      const matchInList = countriesList.find(c => c.countryName.toLowerCase() === guess.toLowerCase());
+      const effectiveGuess = (matchInList?.wbName || guess).toLowerCase();
       const guessedIndex = correctAnswers.findIndex(
-        (item) => item.country.toLowerCase() === guess.toLowerCase()
+        (item) => item.country.toLowerCase() === effectiveGuess
       );
 
       if (guessedIndex >= 0 && !revealedCountries.includes(guessedIndex)) {
