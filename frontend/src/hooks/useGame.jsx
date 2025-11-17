@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchGames, getTodayGame } from "../api/gameApi.jsx";
+import { fetchGames, getTodayGame, runGameById } from "../api/gameApi.jsx";
 import { fetchCountries } from "../api/countryApi.jsx";
 import { submitDailyGame } from "../api/userApi.jsx";
 
@@ -37,8 +37,27 @@ export function useGame(user) {
           return;
         }
 
+        // set basic params from definition
         setGameParameters(todayGame);
         setGameId(todayGame._id || null);
+
+        // run the game on backend to obtain live ranking
+        const run = await runGameById(todayGame._id, {
+          year: todayGame.defaultYear,
+          top: (todayGame.options && todayGame.options.topDefault) || 10,
+        });
+        if (run && Array.isArray(run.ranking)) {
+          setCorrectAnswers(run.ranking.map((r) => ({ country: r.country, value: r.value })));
+          // ensure unit/hint/title from backend if needed
+          if (run.game) {
+            setUnit(run.game.unit || todayGame.unit || "");
+            setHint(run.game.hint || todayGame.hint || "");
+            setGameTitle(run.game.title || todayGame.title || "");
+          }
+        } else {
+          // Fallback: empty ranking
+          setCorrectAnswers([]);
+        }
 
         // check if the user already played today
         const today = new Date();
@@ -116,10 +135,6 @@ export function useGame(user) {
   const setGameParameters = (game) => {
     setGameTitle(game.title);
     setUnit(game.unit);
-    setCorrectAnswers(game.countries.map(({ countryName, value }) => ({
-      country: countryName,
-      value
-    })));
     setHint(game.hint);
   };
 
