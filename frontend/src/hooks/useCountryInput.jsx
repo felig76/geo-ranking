@@ -10,7 +10,7 @@ export const useCountryInput = (countriesList) => {
   const handleInputChange = (event) => {
     const value = event.target.value;
     setGuess(value);
-    setSelectedIndex(-1);
+    setSelectedIndex(0);
 
     if (value.length > 0) {
       setFilteredCountries(
