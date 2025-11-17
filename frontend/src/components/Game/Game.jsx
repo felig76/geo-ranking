@@ -7,6 +7,7 @@ import GameStatus from "../GameStatus/GameStatus.jsx";
 import TopList from "../TopList/TopList.jsx";
 import CountryInput from "../CountryInput/CountryInput.jsx";
 import ResultsModal from "../ResultsModal/ResultsModal.jsx";
+import Loading from "../Loading/Loading.jsx";
 
 function Game() {
   const { user, loading } = useAuth();
@@ -67,7 +68,7 @@ function Game() {
     }
   }, [gameOver]);
 
-  if (loading || gameLoading) return;
+  if (loading || gameLoading) return <Loading />;
 
   return (
     <div id="game">
