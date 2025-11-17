@@ -5,7 +5,9 @@ const API_URL = import.meta.env.PROD
 export const fetchCountries = async () => {
   try {
     const response = await axios.get(`${API_URL}/api/countries`);
-    return response.data?.data || [];
+    const data = response.data?.data || [];
+    // Adapt to legacy frontend expectation: { countryName } for suggestions
+    return data.map((c) => ({ countryName: c.name, iso2: c.iso2 }));
   } catch (error) {
     console.error("Error fetching countries list:", error);
     return [];
