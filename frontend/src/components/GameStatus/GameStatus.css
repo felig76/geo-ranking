@@ -32,6 +32,7 @@
 #gameControlContainer {
   display: flex;
   gap: 0.50rem;
+  position: relative;
 }
 
 .gameStatusButton {
@@ -48,16 +49,4 @@
 .gameStatusButton:disabled {
   color: #6b6b6b;
   cursor: default;
-}
-
-#hint {
-  font-size: 0.8rem;
-  margin: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #1a1a1a;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s ease, color 0.2s ease;
 }

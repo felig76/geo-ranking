@@ -11,6 +11,7 @@ export const fetchCountries = async () => {
       countryName: c.commonName || c.name, // display in suggestions
       wbName: c.name, // official name used by WB ranking and matching
       iso2: c.iso2,
+      flagUrl: c.flagUrl, // URL de la bandera desde FlagCDN
     }));
   } catch (error) {
     console.error("Error fetching countries list:", error);

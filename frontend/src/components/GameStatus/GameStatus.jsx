@@ -1,4 +1,6 @@
 import './GameStatus.css';
+import HintModal from './HintModal.jsx';
+
 export default function GameStatus({ gameTitle, timeLeft, revealedCount, totalAnswers, gameOver, handleHint, handleGiveUp, gaveUp, hint, hintUsed }) {
 	const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -28,19 +30,16 @@ export default function GameStatus({ gameTitle, timeLeft, revealedCount, totalAn
 				>
 					{formatTime(timeLeft)}
 				</h3>
-				<div id="gameControlContainer">
+				<div id="gameControlContainer" style={{ position: 'relative' }}>
 					<button className='gameStatusButton' id="giveUpButton" disabled={gameOver} onClick={handleGiveUp} title="Give up">
 						🏳️
 					</button>
 					<button className='gameStatusButton' id="hintButton" disabled={gameOver || hintUsed} onClick={handleHint} title="Hint">
 						💡
 					</button>
+					<HintModal hint={hint} isVisible={hintUsed} />
 				</div>
 			</div>
-			{hintUsed &&
-			<p id="hint">
-				{hint || " "}
-			</p>}
 		</div>
 	);
 }

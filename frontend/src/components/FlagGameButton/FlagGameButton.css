@@ -1,0 +1,61 @@
+.flag-game-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, #083a2a 0%, #064252 100%);
+  border: 2px solid #46fac1;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+  animation: all 0.5s ease-out;
+}
+
+@keyframes buttonPulse {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.flag-game-button:hover {
+  background: linear-gradient(135deg, #10976a 0%, #06b6d4 100%);
+  border-color: #34d399;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+.flag-game-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+}
+
+.flag-game-button--completed {
+  background: linear-gradient(135deg, #2a1f00 0%, #3b2a00 100%);
+  border-color: #f5c542;
+  box-shadow: 0 4px 15px rgba(245, 197, 66, 0.25);
+  opacity: 0.9;
+}
+
+.flag-game-button--completed:hover {
+  background: linear-gradient(135deg, #3d2e00 0%, #52400a 100%);
+  border-color: #f5c542;
+  box-shadow: 0 6px 20px rgba(245, 197, 66, 0.35);
+  transform: translateY(-2px);
+}
+
+.flag-game-icon {
+  font-size: 1.2rem;
+}
+
+.flag-game-text {
+  font-family: 'Raleway', sans-serif;
+}

@@ -1,8 +1,28 @@
 import './ResultsModal.css'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 function ResultsModal({ isOpen, onClose, totalItems, revealedIndices, user, unit }) {
-  if (!isOpen) return null
+  const [showModal, setShowModal] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      if (!hasAnimated) {
+        const timer = setTimeout(() => {
+          setShowModal(true)
+          setHasAnimated(true)
+        }, 1500)
+        return () => clearTimeout(timer)
+      } else {
+        setShowModal(true)
+      }
+    } else {
+      setShowModal(false)
+      setHasAnimated(false)
+    }
+  }, [isOpen, hasAnimated])
+
+  if (!isOpen || !showModal) return null
 
   const pointsPerCorrect = 1
   const items = Array.from({ length: totalItems }, (_, i) => i)
