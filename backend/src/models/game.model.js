@@ -5,18 +5,10 @@ const gameSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  countries: [
-    {
-      countryName: {
-        type: String,
-        required: true
-      },
-      value: {
-        type: Number,
-        required: true
-      }
-    }
-  ],
+  indicator: {
+    type: String,
+    required: true,
+  },
   unit: {
     type: String,
     required: true,
@@ -24,6 +16,12 @@ const gameSchema = new mongoose.Schema({
   hint: {
     type: String,
     required: true,
+  },
+  defaultYear: {
+    type: Number,
+  },
+  options: {
+    type: mongoose.Schema.Types.Mixed,
   }
 });
 

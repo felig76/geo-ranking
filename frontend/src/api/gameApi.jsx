@@ -21,3 +21,17 @@ export const getTodayGame = (games) => {
   
   return games[index];
 };
+
+export const runGameById = async (id, { year, top = 10 } = {}) => {
+  if (!id) return null;
+  try {
+    const params = new URLSearchParams();
+    if (year) params.set('year', year);
+    if (top) params.set('top', String(top));
+    const response = await axios.get(`${API_URL}/api/games/${id}/run?${params.toString()}`);
+    return response.data?.data || null;
+  } catch (error) {
+    console.error("Error running game:", error);
+    return null;
+  }
+};

@@ -9,10 +9,11 @@ function TopList({ correctAnswers, revealedCountries, revealedLost, unit }) {
         >
           <p className='list-top-index'>Top {index + 1}</p>
           <p className='list-item-text'>
-            {revealedCountries.includes(index) || revealedLost.includes(index) ? (
-              ` ${item.country}: ${item.value.toLocaleString()} ${unit}`
-            ) : (
-              ""
+            {(revealedCountries.includes(index) || revealedLost.includes(index)) && (
+              <>
+                
+                {`${item.country}: ${Number(item.value).toLocaleString()} ${unit}`}
+              </>
             )}
           </p>
           
