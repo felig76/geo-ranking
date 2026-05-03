@@ -3,17 +3,24 @@ import React, { useState, useEffect } from 'react'
 
 function ResultsModal({ isOpen, onClose, totalItems, revealedIndices, user, unit }) {
   const [showModal, setShowModal] = useState(false)
+  const [hasAnimated, setHasAnimated] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
-      const timer = setTimeout(() => {
+      if (!hasAnimated) {
+        const timer = setTimeout(() => {
+          setShowModal(true)
+          setHasAnimated(true)
+        }, 1500)
+        return () => clearTimeout(timer)
+      } else {
         setShowModal(true)
-      }, 1500)
-      return () => clearTimeout(timer)
+      }
     } else {
       setShowModal(false)
+      setHasAnimated(false)
     }
-  }, [isOpen])
+  }, [isOpen, hasAnimated])
 
   if (!isOpen || !showModal) return null
 
