@@ -1,0 +1,250 @@
+.flag-game {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.flag-game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.flag-game-header h3 {
+  color: white;
+  font-size: 1.2rem;
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+.flag-game-back {
+  background: #1a1a1a;
+  color: white;
+  border: 1px solid #6b6b6b;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.flag-game-back:hover {
+  border-color: #646cff;
+}
+
+.flag-game-back.completed {
+  border-color: #f5c542;
+  color: #f5c542;
+  background: #1f1800;
+}
+
+.flag-game-back.completed:hover {
+  background: #2a2100;
+  border-color: #ffd966;
+  color: #ffd966;
+}
+
+.flag-game-instructions {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: center;
+}
+
+.flag-game-instructions.already-submitted {
+  color: #6bffa0;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(71, 255, 71, 0.06);
+  border: 1px solid rgba(71, 255, 71, 0.2);
+  border-radius: 6px;
+}
+
+.flag-game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.flag-game-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #131313;
+  border: 1px solid #6b6b6b;
+  border-radius: 5px;
+  padding: 0.4rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.flag-game-item.revealed {
+  background-color: #012200;
+  border: 1px solid #47ff47;
+}
+
+.flag-game-item.revealedLost {
+  background-color: #222222;
+  border: 1px solid #ff3838;
+}
+
+.flag-country-name {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 400;
+  min-width: 8rem;
+  flex: 1;
+}
+
+.flag-drop-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 36px;
+  background: #1a1a1a;
+  border: 1px dashed #3a3a3a;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.flag-drop-zone.drag-over {
+  border-color: #646cff;
+  background: #252525;
+}
+
+.flag-empty-slot {
+  color: #6b6b6b;
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.flag-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.flag-item.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.flag-item.pool-item {
+  margin: 0.25rem;
+}
+
+.flag-item-image {
+  width: 40px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid #3a3a3a;
+}
+
+.flag-item-placeholder {
+  width: 40px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a2a;
+  border-radius: 3px;
+  font-size: 1rem;
+}
+
+.flag-item-result {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.flag-item-result.correct {
+  color: #47ff47;
+}
+
+.flag-item-result.incorrect {
+  color: #ff3838;
+}
+
+.flag-game-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.flag-game-submit {
+  background: #1a1a1a;
+  color: white;
+  border: 1px solid #6b6b6b;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.flag-game-submit:hover {
+  border-color: #646cff;
+}
+
+.flag-game-submit:active {
+  animation: pressColorAnimation 0.3s ease-in-out;
+}
+
+@keyframes pressColorAnimation {
+  0% {
+    background-color: #303030;
+  }
+  100% {
+    background-color: #1a1a1a;
+  }
+}
+
+.flag-game-score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+  border: 1px solid #646cff;
+  border-radius: 10px;
+  box-shadow: 0 0 18px rgba(100, 108, 255, 0.15);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.flag-game-score-text {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.flag-game-score-value {
+  color: #7c87ff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(100, 108, 255, 0.5);
+}
+
+.flag-game-score-details {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin: 0;
+}
