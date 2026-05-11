@@ -18,6 +18,21 @@
   }
 }
 
+@keyframes slideLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+.hint-modal.closing {
+  animation: slideLeft 0.28s ease-in forwards;
+}
+
 .hint-modal-content {
   background: linear-gradient(135deg, #352708 0%, #291103 100%);
   border: 2px solid #f5ca0b;
